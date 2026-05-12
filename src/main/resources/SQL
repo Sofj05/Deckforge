@@ -1,0 +1,74 @@
+CREATE DATABASE Deckforge;
+USE Deckforge;
+
+CREATE TABLE User (
+user_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+username VARCHAR(50) NOT NULL,
+email VARCHAR(50) NOT NULL,
+passwordhash VARCHAR(255) NOT NULL,
+role ENUM('USER', 'ADMIN')
+);
+
+CREATE TABLE Card (
+card_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+card_name VARCHAR(100) NOT NULL,
+cardType ENUM('CREATURE', 'LAND', 'INSTANT', 'SORCERY', 'ARTIFACT', 'ENCHANTMENT', 'PLANESWALKER'),
+mana ENUM('WHITE', 'BLUE', 'BLACK', 'RED', 'GREEN' 'NEUTRAL'),
+setName VARCHAR(100) NOT NULL,
+rarity ENUM('COMMON', 'UNCOMMON', 'RARE', 'MYTHICRARE'),
+ruleText VARCHAR(255) NOT NULL,
+image VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Deck (
+deck_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+deck_name VARCHAR(50) NOT NULL,
+format ENUM('COMMANDER', 'STANDARD'),
+user_id INT NOT NULL,
+
+FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TABLE Event (
+event_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+event_name VARCHAR(100) NOT NULL,
+organizer INT NOT NULL,
+date DATE NOT NULL,
+time TIME NOT NULL,
+ruleText VARCHAR(255) NOT NULL,
+maxParticipants INT NOT NULL,
+format ENUM('COMMANDER', 'STANDARD'),
+status ENUM ('PROCESSING', 'ONGOING', 'COMPLETED', 'CANCELLED'),
+
+FOREIGN KEY (organizer) REFERENCES User(user_id)
+);
+
+CREATE TABLE Participants (
+event_id INT NOT NULL,
+user_id INT NOT NULL,
+
+FOREIGN KEY (event_id) REFERENCES Event(event_id),
+FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+
+CREATE TABLE UserCollection (
+card_id INT NOT NULL,
+user_id INT NOT NULL,
+quantity INT NOT NULL DEFAULT 1,
+
+FOREIGN KEY (card_id) REFERENCES Card(card_id),
+FOREIGN KEY (user_id) REFERENCES User(User_id)
+);
+
+CREATE TABLE DeckCard (
+card_id INT NOT NULL,
+deck_id INT NOT NULL,
+quantity INT NOT NULL DEFAULT 1,
+
+FOREIGN KEY (card_id) REFERENCES Card(card_id),
+FOREIGN KEY (deck_id) REFERENCES Deck(deck_id)
+);
+
+
+

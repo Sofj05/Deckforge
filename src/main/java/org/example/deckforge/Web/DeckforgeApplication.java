@@ -1,4 +1,4 @@
-package org.example.deckforge;
+package org.example.deckforge.Web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
