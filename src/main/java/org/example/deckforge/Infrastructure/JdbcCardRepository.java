@@ -54,22 +54,24 @@ public class JdbcCardRepository implements ICardRepository {
 
     public List<Card> getCardByUser(){
         String sql = """
-                SELECT
-                    u.username,
-                    c.card_id,
-                    c.card_name,
-                    c.cardType,
-                    c.mana,
-                    c.nameOfSet,
-                    c.rarity,
-                    uc.quantity
-                FROM UserCollection uc
-                JOIN User u
-                    ON uc.user_id = u.user_id
-                JOIN Card c
-                    ON uc.card_id = c.card_id
-                WHERE u.user_id = 1;
-                """;
+            SELECT
+                c.card_id,
+                c.card_name,
+                c.cardType,
+                c.mana,
+                c.nameOfSet,
+                c.rarity,
+                c.ruleText,
+                c.image,
+                c.ability,
+                uc.quantity
+            FROM UserCollection uc
+            JOIN User u
+                ON uc.user_id = u.user_id
+            JOIN Card c
+                ON uc.card_id = c.card_id
+            WHERE u.user_id = ?;
+            """;
         try {
             return jdbcTemp.query(sql, cardRowMapper);
         } catch (EmptyResultDataAccessException e) {

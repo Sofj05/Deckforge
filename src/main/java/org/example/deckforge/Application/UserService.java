@@ -25,7 +25,7 @@ public class UserService {
 
     public void updateUser(int id, User user) {
         validation.validateUser(user);
-        uRepo.updateUser(id. user);
+        uRepo.updateUser(id, user);
     }
 
     public void deleteUser(int id) {
