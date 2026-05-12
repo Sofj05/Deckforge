@@ -9,18 +9,19 @@ public class Card {
     private String name;
     private Cardtype cardtype;
     private Mana mana;
-    private String setName;
+    private String nameOfSet;
     private Rarity rarity;
     private String ruleText;
     private String image;
 
+
     public Card(){}
 
-    public Card(String name, Cardtype cardtype, Mana mana, String setName, Rarity rarity, String ruleText, String image){
+    public Card(String name, Cardtype cardtype, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String image){
         this.name = name;
         this.cardtype = cardtype;
         this.mana = mana;
-        this.setName = setName;
+        this.nameOfSet = nameOfSet;
         this.rarity = rarity;
         this.ruleText = ruleText;
         this.image = image;
@@ -51,11 +52,11 @@ public class Card {
         return mana;
     }
 
-    public void setSetType(String setName){
-        this.setName = setName;
+    public void setNameOfSet(String nameOfSet){
+        this.nameOfSet = nameOfSet;
     }
-    public String getSetType(){
-        return setName;
+    public String getNameOfSet(){
+        return nameOfSet;
     }
 
     public void setRarity(Rarity rarity){
