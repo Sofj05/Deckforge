@@ -4,6 +4,7 @@ import org.example.deckforge.Domain.Repository.ICardRepository;
 import org.example.deckforge.Domain.Repository.IDeckRepository;
 import org.example.deckforge.Domain.Repository.IEventRepository;
 import org.example.deckforge.Domain.Repository.IUserRepository;
+import org.example.deckforge.Domain.User;
 
 
 public class Validation {
@@ -26,7 +27,7 @@ public class Validation {
 
     public void validateEvent() throws ValidationException {}
 
-    public void validateUser() throws ValidationException {}
+    public void validateUser(User user) throws ValidationException {}
 
     public void validateLogin() throws ValidationException {}
 

@@ -13,11 +13,12 @@ public class Card {
     private Rarity rarity;
     private String ruleText;
     private String image;
+    private String ability;
 
 
     public Card(){}
 
-    public Card(String name, Cardtype cardtype, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String image){
+    public Card(String name, Cardtype cardtype, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String image, String ability){
         this.name = name;
         this.cardtype = cardtype;
         this.mana = mana;
@@ -25,6 +26,7 @@ public class Card {
         this.rarity = rarity;
         this.ruleText = ruleText;
         this.image = image;
+        this.ability = ability;
     }
 
     public void setId(int id){
@@ -79,5 +81,8 @@ public class Card {
     public String getImage(){
         return image;
     }
+
+    public void setAbility(String ability) { this.ability = ability; }
+    public String getAbility() { return ability; }
 
 }

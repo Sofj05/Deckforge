@@ -1,11 +1,13 @@
 package org.example.deckforge.Domain.Repository;
 
-import org.example.deckforge.Domain.Card;
+import org.example.deckforge.Domain.User;
 
 import java.util.List;
 
 public interface IUserRepository {
 
-    public List<Card> getAllCards();
-
-    }
+    void createUser(User user);
+    void readUser(User user);
+    void updateUser(int id, User user);
+    void deleteUser(int id);
+}

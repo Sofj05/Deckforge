@@ -1,6 +1,7 @@
 package org.example.deckforge.Application;
 
 import org.example.deckforge.Application.Validation.Validation;
+import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.Repository.IDeckRepository;
 
 public class DeckService {
@@ -12,11 +13,23 @@ public class DeckService {
         this.validation = validation;
     }
 
-    public void createDeck() {}
+    public void createDeck(Deck deck) {
+        validation.validateDeck(deck);
+        dRepo.createDeck(deck);
+    }
 
-    public void readDeck() {}
+    public void readDeck(Deck deck) {
+        validation.validateDeck(deck);
+        dRepo.readDeck(deck);
+    }
 
-    public void updateDeck() {}
+    public void updateDeck(int id, Deck deck) {
+        validation.validateCard(deck);
+        dRepo.updateDeck(id, deck);
+    }
 
-    public void deleteDeck() {}
+    public void deleteDeck(int id) {
+        validation.validateCard(id);
+        dRepo.deleteDeck(id);
+    }
 }

@@ -14,10 +14,11 @@ card_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 card_name VARCHAR(100) NOT NULL,
 cardType ENUM('CREATURE', 'LAND', 'INSTANT', 'SORCERY', 'ARTIFACT', 'ENCHANTMENT', 'PLANESWALKER'),
 mana ENUM('WHITE', 'BLUE', 'BLACK', 'RED', 'GREEN', 'NEUTRAL'),
-setName VARCHAR(100) NOT NULL,
+nameOfSet VARCHAR(100) NOT NULL,
 rarity ENUM('COMMON', 'UNCOMMON', 'RARE', 'MYTHICRARE'),
 ruleText VARCHAR(255) NOT NULL,
-image VARCHAR(255) NOT NULL
+image VARCHAR(255) NOT NULL,
+ability VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Deck (
@@ -47,6 +48,7 @@ CREATE TABLE Participants (
 event_id INT NOT NULL,
 user_id INT NOT NULL,
 
+PRIMARY KEY (event_id, user_id),
 FOREIGN KEY (event_id) REFERENCES Event(event_id),
 FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
@@ -57,6 +59,7 @@ card_id INT NOT NULL,
 user_id INT NOT NULL,
 quantity INT NOT NULL DEFAULT 1,
 
+PRIMARY KEY (card_id, user_id),
 FOREIGN KEY (card_id) REFERENCES Card(card_id),
 FOREIGN KEY (user_id) REFERENCES User(User_id)
 );
@@ -66,6 +69,7 @@ card_id INT NOT NULL,
 deck_id INT NOT NULL,
 quantity INT NOT NULL DEFAULT 1,
 
+PRIMARY KEY (card_id, deck_id),
 FOREIGN KEY (card_id) REFERENCES Card(card_id),
 FOREIGN KEY (deck_id) REFERENCES Deck(deck_id)
 );
