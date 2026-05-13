@@ -16,6 +16,7 @@ public class Event {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime time;
 
     private String location;
@@ -42,6 +43,9 @@ public class Event {
     
     public void setId(int id){
         this.id = id;
+    }
+    public int getId(){
+        return id;
     }
     
     public void setName(String name){

@@ -1,10 +1,19 @@
 package org.example.deckforge.Application.Validation;
 
+import org.example.deckforge.Domain.Card;
+import org.example.deckforge.Domain.Deck;
+import org.example.deckforge.Domain.Enums.*;
+import org.example.deckforge.Domain.Event;
 import org.example.deckforge.Domain.Repository.ICardRepository;
 import org.example.deckforge.Domain.Repository.IDeckRepository;
 import org.example.deckforge.Domain.Repository.IEventRepository;
 import org.example.deckforge.Domain.Repository.IUserRepository;
 import org.example.deckforge.Domain.User;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 
 public class Validation {
@@ -21,17 +30,73 @@ public class Validation {
         this.uRepo = uRepo;
     }
 
-    public void validateCard() throws ValidationException {}
+    public void validateNewCard(Card card) throws ValidationException {
+        if (card.getName() == null || card.getName().isEmpty() ){
+            throw new ValidationException("Kort skal indeholde navn");
+        }
+        if (card.getAbility() == null || card.getAbility().isEmpty()){
+            throw new ValidationException("Kort skal have ability");
+        }
+        if (card.getRarity() == null){
+            throw new ValidationException("Kort skal have sjælendhed");
+        }
+        if (card.getMana() == null){
+            throw new ValidationException("Kort skal have mana");
+        }
+        if (card.getCardtype() == null){
+            throw new ValidationException("Korttype skal nævnes");
+        }
+        if (card.getNameOfSet() == null || card.getNameOfSet().isEmpty()){
+            throw new ValidationException("Navn på sæt skal nævnes");
+        }
 
-    public void validateDeck() throws ValidationException {}
+    }
 
-    public void validateEvent() throws ValidationException {}
+    public void validateDeck(Deck deck) throws ValidationException {}
 
-    public void validateUser(User user) throws ValidationException {}
+    public void validateEvent(Event event) throws ValidationException {
+        if (event.getName() == null || event.getName().isEmpty()){
+            throw new ValidationException("Venligst indtast navnet på dette event");
+        }
+        if (event.getOrganizer() == null){
+            throw new ValidationException("Event skal have arrangør");
+        }
+        if (event.getDate() == null){
+            throw new ValidationException("Event skal have dato");
+        }
+        if (event.getTime() == null){
+            throw new ValidationException("Event skal have tidspunkt");
+        }
+        if (event.getMaxParticipants() <= 0){
+            throw new ValidationException("Event skal have et gyldigt antal pladser til eventet. F.eks. 10");
+        }
+        if (event.getRules().isEmpty() || event.getRules() == null){
+            throw new ValidationException("Regler for event skal inkluderes");
+        }
+    }
+
+    public void validateUser(User user) throws ValidationException {
+        if (user.getUsername().isEmpty() || user.getUsername() == null){
+            throw new ValidationException("Bruger skal have brugernavn");
+        }
+        if (user.getEmail().isEmpty() || user.getEmail() == null){
+            throw new ValidationException("Der skal bruges email for at oprette en bruger");
+        }
+        if (!user.getEmail().contains("@")){
+            throw new ValidationException("Email skal indeholde '@'");
+        }
+        if (user.getPasswordHash().isEmpty() || user.getPasswordHash() == null){
+            throw new ValidationException("Bruger skal have adgangskode");
+        }
+        if (user.getPasswordHash().length() < 6){
+            throw new ValidationException("Adgangskode skal være mere end 6 karakterer");
+        }
+
+    }
 
     public void validateLogin() throws ValidationException {}
 
     public void validateString() throws ValidationException {}
 
-    public void validateInt() throws ValidationException {}
+    public void validateInt(int id) throws ValidationException {}
 }

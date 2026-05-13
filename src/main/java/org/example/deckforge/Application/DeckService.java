@@ -24,12 +24,12 @@ public class DeckService {
     }
 
     public void updateDeck(int id, Deck deck) {
-        validation.validateCard(deck);
+        validation.validateDeck(deck);
         dRepo.updateDeck(id, deck);
     }
 
     public void deleteDeck(int id) {
-        validation.validateCard(id);
+        validation.validateInt(id);
         dRepo.deleteDeck(id);
     }
 }

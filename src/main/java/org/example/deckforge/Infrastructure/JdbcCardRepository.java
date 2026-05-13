@@ -5,6 +5,7 @@ import org.example.deckforge.Domain.Enums.Cardtype;
 import org.example.deckforge.Domain.Enums.Mana;
 import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Repository.ICardRepository;
+import org.example.deckforge.Domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,6 @@ public class JdbcCardRepository implements ICardRepository {
         return  card;
     };
 
-
     @Override
     public List<Card> getAllCards(){
         String sql = """
@@ -51,8 +51,8 @@ public class JdbcCardRepository implements ICardRepository {
             return null;
         }
     }
-
-    public List<Card> getCardByUser(){
+    @Override
+    public List<Card> getCardsByUser(User user){
         String sql = """
             SELECT
                 c.card_id,
@@ -73,19 +73,72 @@ public class JdbcCardRepository implements ICardRepository {
             WHERE u.user_id = ?;
             """;
         try {
-            return jdbcTemp.query(sql, cardRowMapper);
+            return jdbcTemp.query(sql, cardRowMapper,user.getId());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
 
     };
+    @Override
+    public Card getCardById(int id){
+      String sql = """
+              SELECT
+                c.card_id,
+                c.card_name,
+                c.cardType,
+                c.mana,
+                c.nameOfSet,
+                c.rarity,
+                c.ruleText,
+                c.image,
+                c.ability,
+                uc.quantity
+            FROM UserCollection uc
+            JOIN User u
+                ON uc.user_id = u.user_id
+            JOIN Card c
+                ON uc.card_id = c.card_id
+            WHERE c.card_id = ?;
+              """;
+      try{
+            return  jdbcTemp.queryForObject(sql,cardRowMapper,id);
+      } catch (EmptyResultDataAccessException e){
+            return null;
+      }
+    }
 
     @Override
-    public void createCard(Card card){};
+    public void addNewCard(Card card){
+        String sql = """
+                INSERT INTO Card
+                (card_name, cardType, mana, nameOfSet, rarity, ruleText, image, ability)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) 
+                """;
+
+        jdbcTemp.update(sql,
+                card.getName(),
+                card.getCardtype(),
+                card.getMana().name(),
+                card.getNameOfSet(),
+                card.getRarity().name(),
+                card.getRuleText(),
+                card.getImage(),
+                card.getAbility()
+        );
+
+    }
+
     @Override
-    public void readCard(Card card){};
+    public void readCard(Card card){}
+
     @Override
-    public void deleteCard(int id){};
+    public void deleteCard(int id){
+        String sql = """
+                DELETE FROM Card
+                WHERE id = ?
+                """;
+        jdbcTemp.update(sql, id);
+    }
 
 
 
