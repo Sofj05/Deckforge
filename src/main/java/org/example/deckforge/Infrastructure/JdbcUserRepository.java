@@ -59,6 +59,37 @@ public class JdbcUserRepository implements IUserRepository {
     }
 
     @Override
+    public User getUserByUsername(String username){
+        String sql = """
+                SELECT
+                    user_id, 
+                    username, 
+                    email, 
+                    password_hash, 
+                    role
+                FROM User
+                WHERE username = ?
+                """;
+
+        try {
+            return jdbcTemp.queryForObject(sql, (rs, rowNum) -> {
+                User u = new User();
+                u.setId(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPasswordHash(rs.getString("passwordhash"));
+                u.setRole(Role.valueOf(rs.getString("role")));
+
+                return u;
+            },  username);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+
+    }
+
+
+    @Override
     public void updateUser(int id, User user){
         String sql = """
                 UPDATE user

@@ -55,7 +55,7 @@ class UserServiceTest {
                 .validateUser(user);
 
         verify(userRepository, times(1))
-                .save(user);
+                .createUser(user);
 
         assertNotEquals("password123", user.getPasswordHash());
 

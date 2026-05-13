@@ -22,7 +22,23 @@ public class JdbcDeckRepository implements IDeckRepository {
     public void readDeck(Deck deck) {}
 
     @Override
-    public void updateDeck(int id, Deck deck) {}
+    public void updateDeck(int id, Deck deck) {
+        String sql = """
+                UPDATE Deck
+                SET
+                name = ?,
+                format = ?,
+                cards = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemp.update(sql,
+                deck.getName(),
+                deck.getFormat(),
+                deck.getCards(),
+                id
+        );
+    }
 
     @Override
     public void deleteDeck(int id) {

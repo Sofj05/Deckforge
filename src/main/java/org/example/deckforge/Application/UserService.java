@@ -5,6 +5,7 @@ import org.example.deckforge.Application.Validation.ValidationException;
 import org.example.deckforge.Domain.Repository.IUserRepository;
 import org.example.deckforge.Domain.User;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,7 @@ public class UserService {
     private IUserRepository uRepo;
     private Validation validation;
 
+    @Autowired
     public UserService(IUserRepository uRepo, Validation validation) {
         this.uRepo = uRepo;
         this.validation = validation;
@@ -19,6 +21,8 @@ public class UserService {
 
     public void createUser(User user) {
         validation.validateUser(user);
+
+        hashPassword(user);
         uRepo.createUser(user);
     }
 
@@ -47,5 +51,9 @@ public class UserService {
 
 
     public User login(String username, String password) {
+        User user = uRepo.getUserByUsername(username);
+
+        validation.validateLogin(user, password);
+        return user;
     }
 }

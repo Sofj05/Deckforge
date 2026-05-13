@@ -8,9 +8,11 @@ import org.example.deckforge.Domain.Enums.Status;
 import org.example.deckforge.Domain.Event;
 import org.example.deckforge.Domain.Repository.IEventRepository;
 import org.example.deckforge.Domain.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class EventService {
     private IEventRepository eRepo;
     private Validation validation;
@@ -65,5 +67,10 @@ public class EventService {
         //Lav status om til completed og/eller giv vinder på dem der vandt + validering på at det er arrangøren der gør dette
 
     }
+
+    public void participateEvent(Event event, User user){
+        //Metode til at tilføje brugere i eventet
+    }
+
 
 }

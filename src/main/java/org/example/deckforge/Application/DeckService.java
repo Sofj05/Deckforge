@@ -3,7 +3,9 @@ package org.example.deckforge.Application;
 import org.example.deckforge.Application.Validation.Validation;
 import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.Repository.IDeckRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DeckService {
     private IDeckRepository dRepo;
     private Validation validation;

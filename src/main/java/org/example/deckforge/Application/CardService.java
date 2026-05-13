@@ -6,13 +6,17 @@ import org.example.deckforge.Domain.Enums.Role;
 import org.example.deckforge.Domain.Repository.ICardRepository;
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CardService {
     private ICardRepository cRepo;
     private Validation validation;
 
+    @Autowired
     public CardService(ICardRepository cRepo, Validation validation) {
         this.cRepo = cRepo;
         this.validation = validation;
@@ -42,7 +46,7 @@ public class CardService {
         return cRepo.getAllCards();
     }
 
-    public List<Card> getCardByUser(User user) {
+    public List<Card> getCardsByUser(User user) {
         return cRepo.getCardsByUser(user);
     }
     public Card getCardByUser(int id){

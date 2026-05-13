@@ -12,4 +12,5 @@ public interface IEventRepository {
     void updateEvent(int id, Event event);
     void deleteEvent(int id);
     List<Event> getOngoingEvents(Status status);
+    int getParticipationCount(Event event);
 }

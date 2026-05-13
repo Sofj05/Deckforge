@@ -9,13 +9,17 @@ import org.example.deckforge.Domain.Repository.IDeckRepository;
 import org.example.deckforge.Domain.Repository.IEventRepository;
 import org.example.deckforge.Domain.Repository.IUserRepository;
 import org.example.deckforge.Domain.User;
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-
+@Component
 public class Validation {
 
     private final ICardRepository cRepo;
@@ -23,6 +27,7 @@ public class Validation {
     private final IEventRepository eRepo;
     private final IUserRepository uRepo;
 
+    @Autowired
     public Validation(ICardRepository cRepo, IDeckRepository dRepo, IEventRepository eRepo, IUserRepository uRepo) {
         this.cRepo = cRepo;
         this.dRepo = dRepo;
@@ -94,7 +99,11 @@ public class Validation {
 
     }
 
-    public void validateLogin() throws ValidationException {}
+    public void validateLogin(User user, String password) throws ValidationException {
+        if (user == null || !BCrypt.checkpw(password, user.getPasswordHash())) {
+            throw new ValidationException("Brugernavn eller adgangskode forkert");
+        }
+    }
 
     public void validateString() throws ValidationException {}
 
