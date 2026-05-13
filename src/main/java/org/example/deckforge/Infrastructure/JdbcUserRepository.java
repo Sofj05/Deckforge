@@ -65,7 +65,7 @@ public class JdbcUserRepository implements IUserRepository {
                     user_id, 
                     username, 
                     email, 
-                    password_hash, 
+                    passwordhash, 
                     role
                 FROM User
                 WHERE username = ?
