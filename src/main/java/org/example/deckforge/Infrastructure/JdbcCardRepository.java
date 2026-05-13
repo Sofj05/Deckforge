@@ -6,6 +6,7 @@ import org.example.deckforge.Domain.Enums.Mana;
 import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Repository.ICardRepository;
 import org.example.deckforge.Domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,7 @@ import java.util.List;
 public class JdbcCardRepository implements ICardRepository {
 
     private final JdbcTemplate jdbcTemp;
-
+    @Autowired
     public JdbcCardRepository(JdbcTemplate jdbcTemp){
         this.jdbcTemp = jdbcTemp;
     }

@@ -4,6 +4,8 @@ import org.example.deckforge.Application.EventService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/event")
@@ -17,11 +19,11 @@ public class EventController {
 
     // ----- Lav Event ----- //
 
-
+/*
     @GetMapping("/createEvent")
     public String createEvent() {
         model.attribute
         return "/event/createEvent";
     }
-
+*/
 }

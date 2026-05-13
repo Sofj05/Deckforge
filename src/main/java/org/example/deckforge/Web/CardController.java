@@ -20,5 +20,5 @@ public class CardController {
         this.cardService = cardService;
         this.userService = userService;
     }
-    
+
 }

@@ -5,6 +5,7 @@ import org.example.deckforge.Domain.User;
 
 import java.util.List;
 
+
 public interface ICardRepository {
 
     List<Card> getAllCards();

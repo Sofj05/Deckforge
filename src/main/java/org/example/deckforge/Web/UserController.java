@@ -17,11 +17,16 @@ public class UserController{
     private final UserService userService;
     private final CardService cardService;
 
-    @Autowired
+
 public UserController(UserService userService, CardService cardService){
     this.userService = userService;
     this.cardService = cardService;
 }
+
+    @GetMapping("/")
+    public String index(Model model){
+    return "index";
+    }
 
 
     // ---- Register User ---- //
