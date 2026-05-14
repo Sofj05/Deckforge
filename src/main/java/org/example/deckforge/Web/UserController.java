@@ -85,8 +85,7 @@ public UserController(UserService userService, CardService cardService){
 
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("Cards", cardService.getCardsByUser(loggedInUser));
-        return "profile";
+        return "/user/profile";
     }
 
 }
-

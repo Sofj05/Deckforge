@@ -45,7 +45,6 @@ public class JdbcCardRepository implements ICardRepository {
                 Select *
                 from card
                 """;
-
         try {
             return jdbcTemp.query(sql, cardRowMapper);
         } catch (EmptyResultDataAccessException e) {
@@ -126,9 +125,7 @@ public class JdbcCardRepository implements ICardRepository {
                 card.getImage(),
                 card.getAbility()
         );
-
     }
-
     @Override
     public void readCard(Card card){}
 
@@ -140,8 +137,5 @@ public class JdbcCardRepository implements ICardRepository {
                 """;
         jdbcTemp.update(sql, id);
     }
-
-
-
 
 }
