@@ -1,57 +1,94 @@
 <!DOCTYPE html>
-<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <title>Mine Kort – Deckforge</title>
 
-    <link rel="stylesheet" href="/deckforge.css">
+    <!-- Magic-kort CSS -->
     <link rel="stylesheet" href="/style.css">
+
+    <!-- Deckforge tema -->
+    <link rel="stylesheet" href="/deckforge.css">
 </head>
 
 <body>
 
-<!-- Header -->
-<div th:replace="fragments/Header :: header"></div>
-
-<!-- Hero -->
+<!-- HERO -->
 <section class="hero">
     <h1>Mine kort</h1>
-    <p>Se dine registrerede Magic‑kort i fuld visning</p>
+    <p>Se dine registrerede Magic-kort</p>
 </section>
 
-<!-- Kortcontainer -->
+<!-- MAGIC-KORT CONTAINER -->
 <div class="card-container">
 
-    <!-- Loop gennem alle kort -->
+    <!-- KORT 1 -->
     <div class="card-item"
-         th:each="card : ${cards}"
-         th:attr="data-mana=${card.mana},
-                  data-set=${card.setName},
-                  data-rarity=${card.rarity},
-                  data-type=${card.cardtype},
-                  data-abilitie=${card.ruleText}">
+         data-mana="{1}{B}{G}"
+         data-set="Duskmourn: House of Horror"
+         data-rarity="Rare"
+         data-type="Legendary Creature — Human Warlock"
+         data-abilitie="Ward 2: Spells or abilities that target this creature are countered unless the opponent pays {2}. |Upkeep Draw: At the beginning of your upkeep, each player draws two cards. |Delirium: If you have four or more card types in your graveyard, each opponent’s maximum hand size becomes 7 minus the number of card types in your graveyard.">
 
         <div class="card-header">
-            <h3 class="card-name" th:text="${card.name}"></h3>
+            <h3 class="card-name">Winter, Misanthropic Guide</h3>
         </div>
 
         <div class="card-image">
-            <img th:src="@{'/uploads/' + ${card.image}}" th:alt="${card.name}">
+            <img src="Winter,_Misanthropic_Guide.jpg" alt="Winter, Misanthropic Guide">
         </div>
 
-        <div class="card-type" th:text="${card.cardtype}"></div>
+        <div class="card-type">
+            Legendary Creature — Human Warlock
+        </div>
 
         <div class="card-rules">
-            <p th:text="${card.ability}"></p>
-            <p th:text="${card.ruleText}"></p>
+            <p><strong>Ward 2 —</strong> Spells or abilities that target this creature are countered unless the opponent pays {2}.</p>
+            <p><strong>Upkeep Draw —</strong> At the beginning of your upkeep, each player draws two cards.</p>
+            <p><strong>Delirium —</strong> If you have four or more card types in your graveyard, each opponent’s maximum hand size becomes 7 minus the number of card types in your graveyard.</p>
         </div>
 
         <div class="card-bottom">
-            <div class="rarity-box" th:text="${card.rarity.substring(0,1)}"></div>
-            <div class="pt-box">—</div>
+            <div class="rarity-box">R</div>
+            <div class="pt-box">3 / 4</div>
         </div>
 
         <div class="card-status owned">Ejet</div>
+    </div>
+
+    <!-- KORT 2 -->
+    <div class="card-item"
+         data-mana="{4}{B}{B}{B}{B}"
+         data-set="Avacyn Restored"
+         data-rarity="Mythic"
+         data-type="Legendary Creature — Demon"
+         data-abilitie="Flying | Lifelink | Pay 7 life: Draw seven cards.">
+
+        <div class="card-header">
+            <h3 class="card-name">Griselbrand</h3>
+        </div>
+
+        <div class="card-image">
+            <img src="Griselbrand.jpg" alt="Griselbrand">
+        </div>
+
+        <div class="card-type">
+            Legendary Creature — Demon
+        </div>
+
+        <div class="card-rules">
+            <p>Flying, lifelink</p>
+            <p>Pay 7 life: Draw seven cards.</p>
+            <p><i>"Avacyn emerged from the broken Helvault, but her freedom came at a price—him."</i></p>
+            <p><i>- Thalia, Knight-Cathar</i></p>
+        </div>
+
+        <div class="card-bottom">
+            <div class="rarity-box">M</div>
+            <div class="pt-box">7 / 7</div>
+        </div>
+
+        <div class="card-status missing">Ønsker</div>
     </div>
 
 </div>
@@ -73,34 +110,36 @@
 </div>
 
 <script>
-
+    // ---------------------------
     // Mana converter
+    // ---------------------------
     function convertMana(cost) {
         let html = "";
         const matches = cost.match(/\{(.*?)\}/g);
-
         if (!matches) return cost;
 
         matches.forEach(symbol => {
             const value = symbol.replace("{", "").replace("}", "");
-
             if (!isNaN(value)) {
                 html += `<span class="mana-symbol mana-num">${value}</span>`;
             } else {
                 html += `<span class="mana-symbol mana-${value}">${value}</span>`;
             }
         });
-
         return html;
     }
 
+    // ---------------------------
     // Rarity color converter
+    // ---------------------------
     function rarityColor(r) {
         const key = r.toLowerCase();
         return `<span class="rarity-${key}">${r}</span>`;
     }
 
+    // ---------------------------
     // Ability formatter
+    // ---------------------------
     function formatAbilities(text) {
         if (!text) return "";
         const abilities = text.split("|");
@@ -110,7 +149,9 @@
         return html;
     }
 
+    // ---------------------------
     // Card click handler
+    // ---------------------------
     document.querySelectorAll('.card-item').forEach(card => {
         card.addEventListener('click', () => {
 
@@ -137,13 +178,14 @@
         });
     });
 
+    // ---------------------------
     // Close modal
+    // ---------------------------
     document.getElementById('card-modal').addEventListener('click', (e) => {
         if (e.target === e.currentTarget) {
             e.currentTarget.style.display = 'none';
         }
     });
-
 </script>
 
 </body>

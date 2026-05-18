@@ -63,6 +63,8 @@ body {
 /* --- KORTLISTE / ENTRY LISTE --- */
 .card-list {
     display: grid;
+    grid-template-columns:
+            repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
 }
 
@@ -118,6 +120,8 @@ body {
     margin-top: 15px;
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 /* --- HEADER (hvis du senere laver en navbar) --- */
@@ -146,43 +150,80 @@ header a:hover {
     color: #60a5fa; /* blå highlight */
 }
 
-/* --- EVENT FORM --- */
-.event-form {
+/* --- FORM STYLING (Deckforge) --- */
+.form {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+}
 
-    gap: 18px;
+.form-group label {
+    font-weight: bold;
+    color: #c7d2fe; /* lys lilla */
+    margin-bottom: 6px;
+    display: block;
+}
 
+.form-group input {
     width: 100%;
-}
-/* LABELS */
-.event-form label {
-    font-weight: 600;
-    color: #d1d5db;
-}
-/* INPUTS */
-.event-form input,
-.event-form select,
-.event-form textarea {
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
-    border: 1px solid #3a4250;
-    background: #1f242c;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
     color: #e5e7eb;
     font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
+    transition: 0.2s ease;
 }
-/* FOCUS */
-.event-form input:focus,
-.event-form select:focus,
-.event-form textarea:focus {
+
+.form-group input:focus {
+    border-color: #6366f1;
+    background: #1f2430;
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
 }
-/* TEXTAREA */
-.event-form textarea {
+
+/* --- FORM ELEMENTS CONSISTENCY --- */
+/* også så det passer til opret af event */
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
+    color: #e5e7eb;
+    font-size: 1rem;
+    transition: 0.2s ease;
+}
+.form-group select {
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
+    color: #e5e7eb;
+    font-size: 1rem;
+    line-height: 44px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+/* focus (samme som input) */
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #6366f1;
+    background: #1f2430;
+    outline: none;
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
+}
+/* textarea lidt pænere */
+.form-group textarea {
     resize: vertical;
     min-height: 120px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
 }

@@ -2,6 +2,7 @@ package org.example.deckforge.Application;
 
 import org.example.deckforge.Application.Validation.Validation;
 import org.example.deckforge.Application.Validation.ValidationException;
+import org.example.deckforge.Domain.Enums.Role;
 import org.example.deckforge.Domain.Repository.IUserRepository;
 import org.example.deckforge.Domain.User;
 import org.mindrot.jbcrypt.BCrypt;
@@ -22,10 +23,13 @@ public class UserService {
     public void createUser(User user) {
         validation.validateUser(user);
 
-        hashPassword(user);
         user.setUsername(user.getUsername().trim());
         user.setEmail(user.getEmail().trim());
         user.setPassword(user.getPassword().trim());
+        if (user.getRole() == null) {
+            user.setRole(Role.USER);
+        }
+        hashPassword(user);
         uRepo.createUser(user);
     }
 

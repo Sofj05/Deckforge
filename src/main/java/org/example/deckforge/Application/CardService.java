@@ -3,7 +3,6 @@ package org.example.deckforge.Application;
 import org.example.deckforge.Application.Validation.Validation;
 import org.example.deckforge.Application.Validation.ValidationException;
 import org.example.deckforge.Domain.Enums.Cardtype;
-import org.example.deckforge.Domain.Enums.Mana;
 import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Enums.Role;
 import org.example.deckforge.Domain.Repository.ICardRepository;
@@ -57,7 +56,7 @@ public class CardService {
     }
 
 
-    public void createCard(String cardName, Cardtype cardType, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String ability, String image) {
+    public void createCard(String cardName, Cardtype cardType, String mana, String nameOfSet, Rarity rarity, String ruleText, String ability, String image) {
         // Lav nyt Card-objekt
         Card card = new Card();
         card.setName(cardName);

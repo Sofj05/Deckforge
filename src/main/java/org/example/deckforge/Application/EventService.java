@@ -72,11 +72,11 @@ public class EventService {
     public void approveEvent(User user, Event event, String decision){
         if (user.getRole().equals(Role.ADMIN)){
             if (decision.equalsIgnoreCase("yes")){
-                deleteEvent(event.getId());
-            }
-            if (decision.equalsIgnoreCase("no")){
                 event.setStatus(Status.ONGOING);
                 eRepo.updateEvent(event.getId(), event);
+            }
+            if (decision.equalsIgnoreCase("no")){
+                deleteEvent(event.getId());
             }
         } else {
             throw new ValidationException("Kun admin kan godkende events");

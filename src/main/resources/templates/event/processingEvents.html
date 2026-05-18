@@ -16,33 +16,67 @@
 </section>
 
 <section class="content container">
-    <table border="1">
-        <thead>
-        <tr>
-            <th>Event</th>
-            <th>Arrangør</th>
-            <th>Dato</th>
-            <th>Tid</th>
-            <th>Handlinger</th>
-        </tr>
-        </thead>
 
-        <tbody>
-        <tr th:each="event : ${events}">
-            <td th:text="${event.name}"></td>
-            <td th:text="${event.organizer.username}"></td>
-            <td th:text="${event.date}"></td>
-            <td th:text="${event.time}"></td>
-            <td>
-                <a th:href="@{/event/{id}(id=${event.id})}">Mere info</a>
-                <! -- handling(er) til at få eventet oprettet eller fjerne det -->
+    <h1>Events der afventer behandling</h1>
 
-            </td>
-        </tr>
-        </tbody>
+    <div class="event-card-container">
 
-    </table>
+        <div class="event-card"
+             th:each="event : ${events}">
 
+            <h3 th:text="${event.name}"></h3>
+
+            <p>
+                <strong>Arrangør:</strong>
+                <span th:text="${event.organizer.username}"></span>
+            </p>
+
+            <p>
+                <strong>Dato:</strong>
+                <span th:text="${event.date}"></span>
+            </p>
+
+            <p>
+                <strong>Tid:</strong>
+                <span th:text="${event.time}"></span>
+            </p>
+
+            <div class="event-card-actions">
+
+                <!-- INFO -->
+                <a th:href="@{/event/showEvent/{id}(id=${event.id})}"
+                   class="btn small">
+                    Se info
+                </a>
+
+                <!-- ACCEPT -->
+                <form th:action="@{/event/approve/{id}(id=${event.id})}"
+                      method="post">
+                    <input type="hidden"
+                           name="decision"
+                           value="yes">
+                    <button type="submit"
+                            class="btn small"
+                            onclick="return confirm('Godkend dette event?')">
+                        Acceptér
+                    </button>
+                </form>
+
+                <!-- AFVIS -->
+                <form th:action="@{/event/approve/{id}(id=${event.id})}"
+                      method="post">
+                    <input type="hidden"
+                           name="decision"
+                           value="no">
+                    <button type="submit"
+                            class="btn small danger"
+                            onclick="return confirm('Afvis dette event?')">
+                        Afvis
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 
 

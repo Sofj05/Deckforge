@@ -1,8 +1,12 @@
 package org.example.deckforge.Web;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.deckforge.Application.EventService;
 import org.example.deckforge.Application.UserService;
+import org.example.deckforge.Application.Validation.AuthHelper;
+import org.example.deckforge.Domain.Enums.Decktype;
 import org.example.deckforge.Domain.Event;
+import org.example.deckforge.Domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -24,6 +28,7 @@ public class EventController {
     @GetMapping("/createEventUser") // Viser createEvent siden
     public String createEvent(Model model) {
         model.addAttribute("event", new Event()); // Tom bruger-objekt til visning i HTML-form
+        model.addAttribute("decktype", Decktype.values()); //Bruges til at sætte værdierne for enums som brugeren kan vælge
         return "event/createEventUser"; // Returnere html filen "createEventUser.html"
     }
 
@@ -35,11 +40,23 @@ public class EventController {
         return "redirect:/event/list";
     }
 
+    //GET: Viser en liste over de events der ventes på at blive behandles. KUN FOR ADMIN!
     @GetMapping("/processingEvents")
     public String getProcessingEvents(Model model) {
         model.addAttribute("events",eventService.getProcessingEvents());
-
         return "event/processingEvents";
+    }
+
+    //POST: Handling der udføres for at fortælle om eventet er accepteret eller det blive afvist
+    @PostMapping("/approve/{id}")
+    public String approveEvent(@PathVariable int id,
+                               @RequestParam String decision,
+                               HttpSession session){
+        Event event = eventService.getEventById(id);
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+        eventService.approveEvent(loggedInUser, event, decision);
+
+        return "redirect:/event/processingEvents";
     }
 
 

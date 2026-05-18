@@ -46,6 +46,7 @@ public class User {
     public String getPasswordHash(){
         return passwordHash;
     }
+
     public String getPassword(){
         return password;
     }
@@ -53,10 +54,10 @@ public class User {
         this.password = password;
     }
 
-
     public void setRole(Role role){
         this.role = role;
     }
+
     public Role getRole(){
         return role;
     }

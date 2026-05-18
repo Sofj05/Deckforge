@@ -22,7 +22,7 @@ public class JdbcUserRepository implements IUserRepository {
     @Override
     public void createUser(User user) {
         String sql = """
-                INSERT INTO users (username, email, password_hash, role)
+                INSERT INTO user (username, email, passwordhash, role)
                 VALUES (?,?,?,?)
         """;
 
@@ -67,7 +67,7 @@ public class JdbcUserRepository implements IUserRepository {
                     email, 
                     passwordhash, 
                     role
-                FROM User
+                FROM user
                 WHERE username = ?
                 """;
 

@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Deckforge – Forside</title>
-    <link rel="stylesheet" href="deckforge.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/deckforge.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
-
-<div th:replace="fragments/Header :: header"></div>
 
 <section class="hero">
     <h1>Velkommen til Deckforge</h1>
@@ -35,7 +33,7 @@
     <div class="card-list">
         <div class="card-entry" th:each="card : ${cards}">
             <h3 th:text="${card.name}"></h3>
-            <p><strong>Type:</strong> <span th:text="${card.type}"></span></p>
+            <p><strong>Type:</strong> <span th:text="${card.cardtype}"></span></p>
             <p><strong>Sjældenhed:</strong> <span th:text="${card.rarity}"></span></p>
 
             <div class="entry-actions">

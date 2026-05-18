@@ -1,14 +1,13 @@
 package org.example.deckforge.Domain;
 
 import org.example.deckforge.Domain.Enums.Cardtype;
-import org.example.deckforge.Domain.Enums.Mana;
 import org.example.deckforge.Domain.Enums.Rarity;
 
 public class Card {
     private int id;
     private String name;
     private Cardtype cardtype;
-    private Mana mana;
+    private String mana;
     private String nameOfSet;
     private Rarity rarity;
     private String ruleText;
@@ -18,7 +17,7 @@ public class Card {
 
     public Card(){}
 
-    public Card(String name, Cardtype cardtype, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String image, String ability) {
+    public Card(String name, Cardtype cardtype, String mana, String nameOfSet, Rarity rarity, String ruleText, String image, String ability) {
         this.name = name;
         this.cardtype = cardtype;
         this.mana = mana;
@@ -31,6 +30,9 @@ public class Card {
 
     public void setId(int id){
         this.id = id;
+    }
+    public int getId(){
+        return id;
     }
 
     public void setName(String name){
@@ -47,10 +49,10 @@ public class Card {
         return cardtype;
     }
 
-    public void setMana(Mana mana){
+    public void setMana(String mana){
         this.mana = mana;
     }
-    public Mana getMana(){
+    public String getMana(){
         return mana;
     }
 

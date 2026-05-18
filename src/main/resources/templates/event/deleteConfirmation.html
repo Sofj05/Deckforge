@@ -6,5 +6,50 @@
 </head>
 <body>
 
+<header class="header">
+  <div class="container nav-container">
+    <a href="/" class="logo">DeckforgeApplication</a>
+
+    <input type="checkbox" id="menu-toggle" class="manu-toggle">
+    <label for="menu-toggle" class="bruger">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="/home">Forside</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Slet event</h1>
+  <p>Bekræft at du ønsker at slette eventet</p>
+</section>
+
+<section class="contet container">
+  <h2>Er du sikker?</h2>
+  <p>
+    Vil du gerne slette eventet:
+    <strong th:text="${event.name}"></strong>?
+  </p>
+
+  <div style="display:flex; gap:20px; margin-top:20px;">
+    <!-- JA-knap -->
+    <form th:action="@{/event/delete/{id}(id=${event.id})}" method="post">
+      <button class="btn" style="background:#d9534f; color:white;">
+        Ja, slet eventet
+      </button>
+    </form>
+
+    <!-- NEJ-knap -->
+    <a class="btn" th:href="@{home}">
+      Nej, gå tilbage
+    </a>
+  </div>
+
+</section>
+
 </body>
 </html>

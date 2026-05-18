@@ -93,7 +93,7 @@ public class Validation {
         if (user.getPassword() == null || user.getPassword().isEmpty()){
             throw new ValidationException("Bruger skal have adgangskode");
         }
-        if (user.getPasswordHash().length() < 6){
+        if (user.getPassword().length() < 6){
             throw new ValidationException("Adgangskode skal være mere end 6 karakterer");
         }
 

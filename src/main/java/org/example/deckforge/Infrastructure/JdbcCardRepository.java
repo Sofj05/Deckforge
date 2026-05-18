@@ -2,7 +2,6 @@ package org.example.deckforge.Infrastructure;
 
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Enums.Cardtype;
-import org.example.deckforge.Domain.Enums.Mana;
 import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Repository.ICardRepository;
 import org.example.deckforge.Domain.User;
@@ -29,7 +28,7 @@ public class JdbcCardRepository implements ICardRepository {
 
         card.setName((rs.getString("card_name")));
         card.setCardtype((Cardtype.valueOf(rs.getString("cardType"))));
-        card.setMana(Mana.valueOf(rs.getString("mana")));
+        card.setMana(rs.getString("mana"));
         card.setNameOfSet((rs.getString("nameOfSet")));
         card.setRarity(Rarity.valueOf(rs.getString("rarity")));
         card.setRuleText(rs.getString("ruleText"));
@@ -118,7 +117,7 @@ public class JdbcCardRepository implements ICardRepository {
         jdbcTemp.update(sql,
                 card.getName(),
                 card.getCardtype(),
-                card.getMana().name(),
+                card.getMana(),
                 card.getNameOfSet(),
                 card.getRarity().name(),
                 card.getRuleText(),

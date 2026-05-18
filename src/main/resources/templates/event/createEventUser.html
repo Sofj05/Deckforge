@@ -19,55 +19,61 @@
 
 <section class="content container">
 
-    <form action="/event/create" method="post" th:object="${event}" class="event-form">
+    <form action="/event/create"
+          method="post"
+          th:object="${event}"
+          class="form">
 
-        <!-- EVENT NAVN -->
-        <label for="name">Eventnavn</label>
-        <input type="text" id="name" th:field="*{name}" required>
+        <div class="form-group">
+            <label for="name">Eventnavn</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
 
-        <!-- DATO -->
-        <label for="date">Dato</label>
-        <input type="date" id="date" th:field="*{date}" required>
+        <div class="form-group">
+            <label for="date">Dato</label>
+            <input type="date" id="date" th:field="*{date}" required>
+        </div>
 
-        <!-- TID -->
-        <label for="time">Tid</label>
-        <input type="time" id="time"th:field="*{time}" required>
+        <div class="form-group">
+            <label for="time">Tid</label>
+            <input type="time" id="time" th:field="*{time}" required>
+        </div>
 
-        <!-- LOKATION -->
-        <label for="location">Lokation</label>
-        <input type="text" id="location" th:field="*{location}"
-               placeholder="Fx. København, Nørrebrohallen" required>
+        <div class="form-group">
+            <label for="location">Lokation</label>
+            <input type="text" id="location" th:field="*{location}"
+                   placeholder="Fx. København, Odense" required>
+        </div>
 
-        <!-- MAX PARTICIPANTS -->
-        <label for="maxParticipants">Maks deltagere</label>
-        <input type="number" id="maxParticipants"
-               th:field="*{maxParticipants}"
-               min="1"
-        required>
+        <div class="form-group">
+            <label for="maxParticipants">Maks deltagere</label>
+            <input type="number" id="maxParticipants"
+                   th:field="*{maxParticipants}" min="1" required>
+        </div>
 
-        <!-- FORMAT (ENUM) -->
-        <label for="format">Format</label>
-        <select id="format" th:field="*{format}">
-            <option value="">-- Vælg format --</option>
-            <option th:each="f : ${format}"
-                    th:value="${f}"
-                    th:text="${f.description}">
-            </option>
-        </select>
+        <div class="form-group">
+            <label for="format">Format</label>
+            <select id="format" th:field="*{format}">
+                <option value="">- Vælg format -</option>
+                <option th:each="f : ${decktype}"
+                        th:value="${f}"
+                        th:text="${f.description}">
+                </option>
+            </select>
+        </div>
 
-        <!-- RULES -->
-        <label for="rules">Regler / Beskrivelse</label>
-        <textarea id="rules"
-                  th:field="*{rules}"
-                  rows="5"
-        placeholder="Skriv event regler eller ekstra information her..."></textarea>
+        <div class="form-group">
+            <label for="rules">Regler / Beskrivelse</label>
+            <textarea id="rules"
+                      th:field="*{rules}"
+                      rows="5"></textarea>
+        </div>
 
-        <!-- ORGANIZER -->
-        <!-- Denne sættes automatisk af backend -->
-        <input type="hidden" name="organizer" value="${loggedInUser.id}">
+        <input type="hidden"
+               name="organizer"
+               th:value="${session.loggedInUser.id}">
 
-        <!-- SUBMIT -->
-        <button type="submit" class="btn-create">
+        <button type="submit" class="btn">
             Opret Event
         </button>
 

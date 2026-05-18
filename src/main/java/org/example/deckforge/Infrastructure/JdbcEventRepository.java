@@ -180,7 +180,43 @@ public class JdbcEventRepository implements IEventRepository {
 
     }
     public Event getEventById(int id){
-        //WIP
-        return null;
+        String sql = """
+                SELECT 
+                    id, 
+                    name, 
+                    organizer, 
+                    date, 
+                    time, 
+                    ruleText, 
+                    maxParticipants, 
+                    format, 
+                    status
+                FROM 
+                    event
+                WHERE 
+                    id = ?
+                """;
+
+        try {
+            return jdbcTemp.queryForObject(sql, (rs, rowNum) -> {
+Event e = new Event();
+                e.setId(rs.getInt("id"));
+                e.setName(rs.getString("name"));
+
+                User organizer = new User();
+                organizer.setId(rs.getInt("organizer"));
+                e.setOrganizer(organizer);
+
+                e.setDate(rs.getDate("date").toLocalDate());
+                e.setTime(rs.getTime("time").toLocalTime());
+                e.setRules(rs.getString("ruleText"));
+                e.setMaxParticipants(rs.getInt("maxParticipants"));
+                e.setFormat(Decktype.valueOf(rs.getString("format")));
+                e.setStatus(Status.valueOf(rs.getString("status")));
+                return e;
+            }, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }

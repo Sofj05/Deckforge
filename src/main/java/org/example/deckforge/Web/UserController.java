@@ -83,7 +83,7 @@ public UserController(UserService userService, CardService cardService){
     @GetMapping("/profile")
     public String home(HttpSession session, Model model){
         if (!AuthHelper.isLoggedIn(session)) {
-            return "redirect:/ user/login";
+            return "redirect:/user/login";
         }
 
         User loggedInUser = AuthHelper.getLoggedIn(session);
