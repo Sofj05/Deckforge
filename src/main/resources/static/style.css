@@ -1,4 +1,3 @@
-
 /* --- LAYOUT TIL FLERE KORT --- */
 .card-container {
     display: flex;
@@ -75,7 +74,6 @@ body {
     margin: 0;
 }
 
-
 /* --- TYPE LINJE --- */
 .card-type {
     padding: 8px 14px;
@@ -146,37 +144,172 @@ body {
     background: #1b1b1b;
     padding: 20px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 420px;
+    width: 60%;
+    max-width: 450px;
+    max-height: none;
+    height: auto;
     color: white;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    text-align: center;
+    text-align: left;
+    display: block;
+    animation: fadeIn 0.25s ease;
 
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Luk-knap */
-.close-btn {
-    align-self: flex-end;
-    font-size: 28px;
-    cursor: pointer;
+    max-height: 95vh;
+    overflow-y: auto;
 }
 
 /* Billedet i modal */
 #modal-image {
-    width: 100%;
+    width: 220px;
     height: auto;
     border-radius: 8px;
     object-fit: contain;
+    float: right;
+    margin-left: 20px;
+    margin-bottom: 10px;
 }
 
-.modal-content {
-    animation: fadeIn 0.25s ease;
+/* --- MANA SYMBOLER --- */
+.mana-symbol {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    line-height: 22px;
+    margin-right: 4px;
 }
 
+/* Farver for mana */
+.mana-W { background: #f8f4e6; color: black; }
+.mana-U { background: #4aa8ff; }
+.mana-B { background: #3a3a3a; }
+.mana-R { background: #d13f2a; }
+.mana-G { background: #3c8c3c; }
+.mana-C { background: #bfbfbf; color: black; }
+
+/* Numbers */
+.mana-num {
+    background: #bfbfbf;
+    color: black;
+}
+
+/* --- RARITY FARVER --- */
+.rarity-common { color: #bfbfbf; }
+.rarity-uncommon { color: #6cd4ff; }
+.rarity-rare { color: #f7d14a; }
+.rarity-mythic { color: #ff6a00; }
+
+/* Fade animation */
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
+}
+
+/* --- Create new card ---  */
+
+/* Sideoverskrift */
+.create-card-title,
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #e5e7eb; /* lys grå */
+    font-size: 2rem;
+}
+
+/* Container omkring formularen */
+.create-card-container {
+    width: 600px;
+    margin: 40px auto;
+    background: #242830; /* mørk panel */
+    padding: 30px 40px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    color: #e5e7eb; /* lys grå */
+}
+
+/* Formularens layout */
+.create-card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Labels */
+.create-card-form label {
+    font-weight: bold;
+    color: #c7d2fe; /* lys lilla */
+    margin-bottom: 4px;
+}
+
+/* Inputs, selects og textarea */
+.create-card-form input[type="text"],
+.create-card-form input[type="file"],
+.create-card-form select,
+.create-card-form textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24; /* mørk baggrund */
+    color: #e5e7eb;
+    font-size: 1rem;
+    transition: 0.2s ease;
+}
+
+/* Fokus-effekt */
+.create-card-form input:focus,
+.create-card-form select:focus,
+.create-card-form textarea:focus {
+    border-color: #6366f1; /* lilla accent */
+    background: #1f2430;
+    outline: none;
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
+}
+
+/* Submit-knap */
+.btn-create {
+    margin-top: 10px;
+    padding: 12px;
+    font-size: 1.1rem;
+    background: #3b82f6; /* blå accent */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.btn-create:hover {
+    background: #2563eb; /* mørkere blå */
+}
+
+/* --- HERO SEKTION --- */
+.hero {
+    background: linear-gradient(135deg, #2d3a4a, #1f2937); /* mørk blågrå */
+    padding: 80px 0;
+    text-align: center;
+    color: white;
+    border-bottom: 2px solid #3b82f6; /* blå accent */
+}
+
+.hero h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    opacity: 0.85;
+    font-size: 1.1rem;
+}
+
+/* Responsiv */
+@media (max-width: 700px) {
+    .create-card-container {
+        width: 90%;
+        padding: 20px;
+    }
 }

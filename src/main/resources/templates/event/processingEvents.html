@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Events der behandles</title>
+
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="hero">
+    <h1>Overblik over events</h1>
+    <p>Liste over events der venter på at blive behandlet</p>
+
+</section>
+
+<section class="content container">
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th>Arrangør</th>
+            <th>Dato</th>
+            <th>Tid</th>
+            <th>Handlinger</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="event : ${events}">
+            <td th:text="${event.name}"></td>
+            <td th:text="${event.organizer.username}"></td>
+            <td th:text="${event.date}"></td>
+            <td th:text="${event.time}"></td>
+            <td>
+                <a th:href="@{/event/{id}(id=${event.id})}">Mere info</a>
+                <! -- handling(er) til at få eventet oprettet eller fjerne det -->
+
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</section>
+
+
+</body>
+</html>

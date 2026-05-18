@@ -120,5 +120,29 @@ public class JdbcUserRepository implements IUserRepository {
                 """;
         jdbcTemp.update(sql, id);
     }
+
+    @Override
+    public User getUserById(int id){
+        String sql = """
+                SELECT user_id,username,email,passwordhash,role
+                FROM user
+                WHERE user_id = ?
+        """;
+
+        try {
+            return jdbcTemp.queryForObject(sql, (rs, rowNUM) -> {
+                User u = new User();
+                u.setId(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setPasswordHash(rs.getString("passwordhash"));
+                u.setRole(Role.valueOf(rs.getString("role")));
+                return u;
+            }, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+    }
 }
 

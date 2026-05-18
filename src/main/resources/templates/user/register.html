@@ -2,9 +2,38 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Registrer</title>
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-//RENAME TIL register//
+
+<section class="content container">
+    <h1>Registrer nyt medlem</h1>
+
+    <form th:action="@{/user/register}" method="post" th:object="${user}" class="form">
+
+        <div class="form-group">
+            <label for="name">Navn</label>
+            <input type="text" id="name" th:field="*{username}">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" th:field="*{email}">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Kode</label>
+            <input type="password" id="password" th:field="*{password}">
+        </div>
+
+        <button class="btn" type="submit">Registrer</button>
+
+        <p th:if="${error != null}" th:text="${error}" style="color:red; margin-top:10px;"></p>
+    </form>
+</section>
+
 </body>
 </html>

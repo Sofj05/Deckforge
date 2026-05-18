@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Opret evet - User</title>
+    <title>Opret Event</title>
+
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+<div th:replace="fragments/Header :: header"></div>
+
+<section class="hero">
+    <h1>Opret Event</h1>
+    <p>Lav et nyt event til Deckforge</p>
+</section>
+
+<section class="content container">
+
+    <form action="/event/create" method="post" th:object="${event}" class="event-form">
+
+        <!-- EVENT NAVN -->
+        <label for="name">Eventnavn</label>
+        <input type="text" id="name" th:field="*{name}" required>
+
+        <!-- DATO -->
+        <label for="date">Dato</label>
+        <input type="date" id="date" th:field="*{date}" required>
+
+        <!-- TID -->
+        <label for="time">Tid</label>
+        <input type="time" id="time"th:field="*{time}" required>
+
+        <!-- LOKATION -->
+        <label for="location">Lokation</label>
+        <input type="text" id="location" th:field="*{location}"
+               placeholder="Fx. København, Nørrebrohallen" required>
+
+        <!-- MAX PARTICIPANTS -->
+        <label for="maxParticipants">Maks deltagere</label>
+        <input type="number" id="maxParticipants"
+               th:field="*{maxParticipants}"
+               min="1"
+        required>
+
+        <!-- FORMAT (ENUM) -->
+        <label for="format">Format</label>
+        <select id="format" th:field="*{format}">
+            <option value="">-- Vælg format --</option>
+            <option th:each="f : ${format}"
+                    th:value="${f}"
+                    th:text="${f.description}">
+            </option>
+        </select>
+
+        <!-- RULES -->
+        <label for="rules">Regler / Beskrivelse</label>
+        <textarea id="rules"
+                  th:field="*{rules}"
+                  rows="5"
+        placeholder="Skriv event regler eller ekstra information her..."></textarea>
+
+        <!-- ORGANIZER -->
+        <!-- Denne sættes automatisk af backend -->
+        <input type="hidden" name="organizer" value="${loggedInUser.id}">
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn-create">
+            Opret Event
+        </button>
+
+    </form>
+
+</section>
+
 
 </body>
 </html>

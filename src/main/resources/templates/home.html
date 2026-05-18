@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Deckforge – Forside</title>
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div th:replace="fragments/Header :: header"></div>
+
+<section class="hero">
+    <h1>Velkommen til Deckforge</h1>
+    <p>Dit værktøj til samlinger, decks og events</p>
+</section>
+
+<section class="content container">
+    <h2>Dine oplysninger</h2>
+    <p><strong>Brugernavn:</strong> <span th:text="${loggedInUser.username}"></span></p>
+
+    <form th:action="@{/users/update}" method="post">
+        <button type="submit" class="btn">Rediger profil</button>
+    </form>
+
+    <a class="btn danger" th:href="@{/users/deleteConfirmation}">
+        Slet min konto
+    </a>
+</section>
+
+<section class="content container">
+    <h1>Dine kort</h1>
+
+    <div class="card-list">
+        <div class="card-entry" th:each="card : ${cards}">
+            <h3 th:text="${card.name}"></h3>
+            <p><strong>Type:</strong> <span th:text="${card.type}"></span></p>
+            <p><strong>Sjældenhed:</strong> <span th:text="${card.rarity}"></span></p>
+
+            <div class="entry-actions">
+                <a th:href="@{/cards/view/{id}(id=${card.id})}" class="btn small">Se</a>
+                <a th:href="@{/cards/update/{id}(id=${card.id})}" class="btn small">Rediger</a>
+                <a th:href="@{/cards/deleteConfirmation/{id}(id=${card.id})}" class="btn small danger">Slet</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

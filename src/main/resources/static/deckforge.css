@@ -145,3 +145,44 @@ header a {
 header a:hover {
     color: #60a5fa; /* blå highlight */
 }
+
+/* --- EVENT FORM --- */
+.event-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    width: 100%;
+}
+/* LABELS */
+.event-form label {
+    font-weight: 600;
+    color: #d1d5db;
+}
+/* INPUTS */
+.event-form input,
+.event-form select,
+.event-form textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #3a4250;
+    background: #1f242c;
+    color: #e5e7eb;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+/* FOCUS */
+.event-form input:focus,
+.event-form select:focus,
+.event-form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+}
+/* TEXTAREA */
+.event-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}

@@ -23,6 +23,9 @@ public class UserService {
         validation.validateUser(user);
 
         hashPassword(user);
+        user.setUsername(user.getUsername().trim());
+        user.setEmail(user.getEmail().trim());
+        user.setPassword(user.getPassword().trim());
         uRepo.createUser(user);
     }
 
@@ -45,15 +48,24 @@ public class UserService {
     }
 
     private void hashPassword(User user) throws ValidationException{
-        String hashed = BCrypt.hashpw(user.getPasswordHash(), BCrypt.gensalt());
+        String hashed = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPasswordHash(hashed);
     }
 
 
     public User login(String username, String password) {
-        User user = uRepo.getUserByUsername(username);
+        username = username.trim();
+        password = password.trim();
 
+        User user = uRepo.getUserByUsername(username);
         validation.validateLogin(user, password);
         return user;
     }
+
+    public User getUserById(int id) {
+        User user = new User();
+
+        return user;
+    }
+
 }

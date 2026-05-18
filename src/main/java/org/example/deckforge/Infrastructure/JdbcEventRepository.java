@@ -82,7 +82,8 @@ public class JdbcEventRepository implements IEventRepository {
         }
     }
 
-    public List<Event> getOngoingEvents(Status status){
+    @Override
+    public List<Event> getEventsByStatus(Status status){
         String sql = """
                 SELECT
                     event_id,
@@ -177,5 +178,9 @@ public class JdbcEventRepository implements IEventRepository {
             return 0;
         }
 
+    }
+    public Event getEventById(int id){
+        //WIP
+        return null;
     }
 }

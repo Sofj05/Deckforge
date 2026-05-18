@@ -16,10 +16,17 @@ import java.util.List;
 public class EventService {
     private IEventRepository eRepo;
     private Validation validation;
+    private final UserService userService;
 
-    public EventService(IEventRepository eRepo, Validation validation) {
+    public EventService(IEventRepository eRepo, Validation validation, UserService userService) {
         this.eRepo = eRepo;
         this.validation = validation;
+        this.userService = userService;
+    }
+
+    public Event getEventById(int id) {
+        validation.validateInt(id);
+        return eRepo.getEventById(id);
     }
 
     public void createEventAsUser(Event event) {
@@ -36,7 +43,20 @@ public class EventService {
 
     public List<Event> getOngoingEvents(){
         Status status = Status.ONGOING;
-        return eRepo.getOngoingEvents(status);
+        return eRepo.getEventsByStatus(status);
+    }
+
+    public List<Event> getProcessingEvents(){
+        Status status = Status.PROCESSING;
+
+        List<Event> events = eRepo.getEventsByStatus(status);
+        for (Event event : events){
+            User organizer = userService.getUserById(event.getOrganizer().getId());
+            if (organizer != null) {
+                event.setOrganizer(organizer);
+            }
+        }
+        return eRepo.getEventsByStatus(status);
     }
 
     public void updateEvent(int id, Event event) {

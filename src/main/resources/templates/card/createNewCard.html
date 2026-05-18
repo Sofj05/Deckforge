@@ -7,18 +7,21 @@
 </head>
 
 <body>
-
-<h1>Opret et nyt kort</h1>
+<section class="hero">
+    <h1>Opret et nyt kort</h1>
+    <p>Tilføj et nyt kort til din samling</p>
+</section>
 
 <div class="create-card-container">
 
-    <form action="/cards/create" method="post" enctype="multipart/form-data" class="create-card-form">
+    <!-- FORM UDEN BACKEND -->
+    <form class="create-card-form" onsubmit="event.preventDefault(); showSuccess();">
 
         <!-- NAVN -->
         <label for="card_name">Kortnavn</label>
         <input type="text" id="card_name" name="card_name" required>
 
-        <!-- CARD TYPE (ENUM) -->
+        <!-- CARD TYPE -->
         <label for="cardType">Korttype</label>
         <select id="cardType" name="cardType" required>
             <option value="CREATURE">Creature</option>
@@ -30,7 +33,7 @@
             <option value="PLANESWALKER">Planeswalker</option>
         </select>
 
-        <!-- MANA (ENUM) -->
+        <!-- MANA -->
         <label for="mana">Mana</label>
         <select id="mana" name="mana" required>
             <option value="WHITE">White</option>
@@ -45,7 +48,7 @@
         <label for="nameOfSet">Sæt</label>
         <input type="text" id="nameOfSet" name="nameOfSet" required>
 
-        <!-- RARITY (ENUM) -->
+        <!-- RARITY -->
         <label for="rarity">Rarity</label>
         <select id="rarity" name="rarity" required>
             <option value="COMMON">Common</option>
@@ -59,7 +62,7 @@
         <textarea id="ruleText" name="ruleText" rows="5"
                   placeholder="Flying, lifelink | Pay 7 life: Draw seven cards."></textarea>
 
-        <!-- ABILITY (separat felt i SQL) -->
+        <!-- ABILITY -->
         <label for="ability">Ability (kort tekst)</label>
         <input type="text" id="ability" name="ability" placeholder="Flying, Lifelink" required>
 
@@ -72,7 +75,18 @@
 
     </form>
 
+    <!-- SUCCESS BESKED -->
+    <p id="successMessage" style="display:none; margin-top:20px; color:green; font-weight:bold;">
+        Kortet er oprettet (lokalt) ✔
+    </p>
+
 </div>
+
+<script>
+    function showSuccess() {
+        document.getElementById("successMessage").style.display = "block";
+    }
+</script>
 
 </body>
 </html>

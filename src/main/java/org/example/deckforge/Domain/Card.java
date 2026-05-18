@@ -18,7 +18,7 @@ public class Card {
 
     public Card(){}
 
-    public Card(String name, Cardtype cardtype, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String image, String ability){
+    public Card(String name, Cardtype cardtype, Mana mana, String nameOfSet, Rarity rarity, String ruleText, String image, String ability) {
         this.name = name;
         this.cardtype = cardtype;
         this.mana = mana;

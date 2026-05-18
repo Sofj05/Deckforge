@@ -11,4 +11,5 @@ public interface IUserRepository {
     void updateUser(int id, User user);
     void deleteUser(int id);
     User getUserByUsername(String username);
+    User getUserById(int id);
 }

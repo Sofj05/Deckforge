@@ -6,6 +6,7 @@ public class User {
     private int id;
     private String username;
     private String email;
+    private String password;
     private String passwordHash;
     private Role role;
 
@@ -45,6 +46,13 @@ public class User {
     public String getPasswordHash(){
         return passwordHash;
     }
+    public String getPassword(){
+        return password;
+    }
+    public void setPassword(String password){
+        this.password = password;
+    }
+
 
     public void setRole(Role role){
         this.role = role;

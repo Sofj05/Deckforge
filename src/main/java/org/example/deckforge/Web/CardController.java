@@ -1,5 +1,8 @@
 package org.example.deckforge.Web;
 
+import org.example.deckforge.Domain.Enums.Cardtype;
+import org.example.deckforge.Domain.Enums.Mana;
+import org.example.deckforge.Domain.Enums.Rarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +37,10 @@ public class CardController {
     @PostMapping("/create")
     public String createCard(
             @RequestParam String card_name,
-            @RequestParam String cardType,
-            @RequestParam String mana,
+            @RequestParam Cardtype cardType,
+            @RequestParam Mana mana,
             @RequestParam String nameOfSet,
-            @RequestParam String rarity,
+            @RequestParam Rarity rarity,
             @RequestParam String ruleText,
             @RequestParam String ability,
             @RequestParam("image") MultipartFile imageFile

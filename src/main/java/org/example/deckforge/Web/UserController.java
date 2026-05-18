@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.example.deckforge.Application.CardService;
 import org.example.deckforge.Application.UserService;
 import org.example.deckforge.Application.Validation.AuthHelper;
+import org.example.deckforge.Application.Validation.ValidationException;
 import org.example.deckforge.Domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,9 +51,9 @@ public UserController(UserService userService, CardService cardService){
     @GetMapping("/login") // Viser login siden
     public String login(HttpSession session) {
         if(AuthHelper.isLoggedIn(session)){
-            return "redirect:/user/home";
+            return "redirect:/user/profile";
         }
-        return "/user/login"; // Returnerer html filen "login.html"
+        return "user/login"; // Returnerer html filen "login.html"
     }
 
     @PostMapping("/login") // Modtager login-formularen
@@ -62,21 +63,39 @@ public UserController(UserService userService, CardService cardService){
             HttpSession session, // Session til at gemme bruger i
             Model model) {
 
+    try {
+
         User loggedInUser = userService.login(username, password); // Tjekker login
 
         if (loggedInUser == null) { // Hvis login fejler
             model.addAttribute("error", "Forkert brugernavn eller adgangskode");
-            return "/user/login"; // Gå tilbage til login
+            return "user/login"; // Gå tilbage til login
         }
 
         session.setAttribute("loggedInUser", loggedInUser); // Gem bruger i session
-        return "redirect:/user/profile";       // Send til home‑side
+        return "redirect:/user/profile";       // Send til profil‑side
+    }catch (ValidationException e){
+        model.addAttribute("error", e.getMessage());
+        return "user/login";
+    }
     }
 
-
-
-    @GetMapping("/profil")
+    @GetMapping("/profile")
     public String home(HttpSession session, Model model){
+        if (!AuthHelper.isLoggedIn(session)) {
+            return "redirect:/ user/login";
+        }
+
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+
+        model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
+        return "user/profile";
+    }
+
+    @GetMapping("/cards")
+    public String userCards(HttpSession session, Model model) {
+
         if (!AuthHelper.isLoggedIn(session)) {
             return "redirect:/user/login";
         }
@@ -84,8 +103,10 @@ public UserController(UserService userService, CardService cardService){
         User loggedInUser = AuthHelper.getLoggedIn(session);
 
         model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("Cards", cardService.getCardsByUser(loggedInUser));
-        return "/user/profile";
+        model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
+
+        return "user/usersCards";
     }
+
 
 }

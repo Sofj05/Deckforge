@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mine Kort – Deckforge</title>
+
+    <link rel="stylesheet" href="/deckforge.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/Header :: header"></div>
+
+<!-- Hero -->
+<section class="hero">
+    <h1>Mine kort</h1>
+    <p>Se dine registrerede Magic‑kort i fuld visning</p>
+</section>
+
+<!-- Kortcontainer -->
+<div class="card-container">
+
+    <!-- Loop gennem alle kort -->
+    <div class="card-item"
+         th:each="card : ${cards}"
+         th:attr="data-mana=${card.mana},
+                  data-set=${card.setName},
+                  data-rarity=${card.rarity},
+                  data-type=${card.cardtype},
+                  data-abilitie=${card.ruleText}">
+
+        <div class="card-header">
+            <h3 class="card-name" th:text="${card.name}"></h3>
+        </div>
+
+        <div class="card-image">
+            <img th:src="@{'/uploads/' + ${card.image}}" th:alt="${card.name}">
+        </div>
+
+        <div class="card-type" th:text="${card.cardtype}"></div>
+
+        <div class="card-rules">
+            <p th:text="${card.ability}"></p>
+            <p th:text="${card.ruleText}"></p>
+        </div>
+
+        <div class="card-bottom">
+            <div class="rarity-box" th:text="${card.rarity.substring(0,1)}"></div>
+            <div class="pt-box">—</div>
+        </div>
+
+        <div class="card-status owned">Ejet</div>
+    </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="card-modal" class="modal">
+    <div class="modal-content">
+
+        <h2 id="modal-title"></h2>
+        <img id="modal-image" src="" alt="">
+
+        <p><strong>Type:</strong> <span id="modal-type"></span></p>
+        <p><strong>Mana:</strong> <span id="modal-mana"></span></p>
+        <p><strong>Sæt:</strong> <span id="modal-set"></span></p>
+        <p><strong>Rarity:</strong> <span id="modal-rarity"></span></p>
+        <p><strong>Abilities:</strong> <span id="modal-abilitie"></span></p>
+
+    </div>
+</div>
+
+<script>
+
+    // Mana converter
+    function convertMana(cost) {
+        let html = "";
+        const matches = cost.match(/\{(.*?)\}/g);
+
+        if (!matches) return cost;
+
+        matches.forEach(symbol => {
+            const value = symbol.replace("{", "").replace("}", "");
+
+            if (!isNaN(value)) {
+                html += `<span class="mana-symbol mana-num">${value}</span>`;
+            } else {
+                html += `<span class="mana-symbol mana-${value}">${value}</span>`;
+            }
+        });
+
+        return html;
+    }
+
+    // Rarity color converter
+    function rarityColor(r) {
+        const key = r.toLowerCase();
+        return `<span class="rarity-${key}">${r}</span>`;
+    }
+
+    // Ability formatter
+    function formatAbilities(text) {
+        if (!text) return "";
+        const abilities = text.split("|");
+        let html = "<ul>";
+        abilities.forEach(a => html += `<li>${a.trim()}</li>`);
+        html += "</ul>";
+        return html;
+    }
+
+    // Card click handler
+    document.querySelectorAll('.card-item').forEach(card => {
+        card.addEventListener('click', () => {
+
+            document.getElementById('modal-title').innerText =
+                card.querySelector('.card-name').innerText;
+
+            document.getElementById('modal-image').src =
+                card.querySelector('.card-image img').src;
+
+            document.getElementById('modal-type').innerText = card.dataset.type;
+
+            document.getElementById('modal-mana').innerHTML =
+                convertMana(card.dataset.mana);
+
+            document.getElementById('modal-set').innerText = card.dataset.set;
+
+            document.getElementById('modal-rarity').innerHTML =
+                rarityColor(card.dataset.rarity);
+
+            document.getElementById('modal-abilitie').innerHTML =
+                formatAbilities(card.dataset.abilitie);
+
+            document.getElementById('card-modal').style.display = 'flex';
+        });
+    });
+
+    // Close modal
+    document.getElementById('card-modal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            e.currentTarget.style.display = 'none';
+        }
+    });
+
+</script>
+
+</body>
+</html>

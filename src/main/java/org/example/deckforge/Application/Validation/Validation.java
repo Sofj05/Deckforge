@@ -81,16 +81,16 @@ public class Validation {
     }
 
     public void validateUser(User user) throws ValidationException {
-        if (user.getUsername().isEmpty() || user.getUsername() == null){
+        if (user.getUsername() == null || user.getUsername().isEmpty()){
             throw new ValidationException("Bruger skal have brugernavn");
         }
-        if (user.getEmail().isEmpty() || user.getEmail() == null){
+        if (user.getEmail() ==null || user.getEmail().isEmpty()){
             throw new ValidationException("Der skal bruges email for at oprette en bruger");
         }
         if (!user.getEmail().contains("@")){
             throw new ValidationException("Email skal indeholde '@'");
         }
-        if (user.getPasswordHash().isEmpty() || user.getPasswordHash() == null){
+        if (user.getPassword() == null || user.getPassword().isEmpty()){
             throw new ValidationException("Bruger skal have adgangskode");
         }
         if (user.getPasswordHash().length() < 6){
