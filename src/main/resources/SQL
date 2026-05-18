@@ -73,3 +73,50 @@ PRIMARY KEY (card_id, deck_id),
 FOREIGN KEY (card_id) REFERENCES Card(card_id),
 FOREIGN KEY (deck_id) REFERENCES Deck(deck_id)
 );
+
+
+INSERT INTO Card
+(card_name, cardType, mana, nameOfSet, rarity, ruleText, image, ability)
+VALUES
+('Flamebound Phoenix',
+'CREATURE',
+'RED',
+'Emberfall Set',
+'RARE',
+'Flying. When Flamebound Phoenix dies, return it to your hand at the beginning of the next end step.',
+'https://example.com/images/flamebound_phoenix.jpg',
+'Rebirth');
+
+INSERT INTO Card
+(card_name, cardType, mana, nameOfSet, rarity, ruleText, image, ability)
+VALUES
+('Verdant Grove Guardian',
+'CREATURE',
+'GREEN',
+'Elderwoods',
+'UNCOMMON',
+'Reach. Whenever a land enters the battlefield under your control, gain 1 life.',
+'https://example.com/images/verdant_grove_guardian.jpg',
+'Life Bloom');
+
+INSERT INTO Card
+(card_name, cardType, mana, nameOfSet, rarity, ruleText, image, ability)
+VALUES
+('Arcane Reflex',
+'INSTANT',
+'BLUE',
+'Chronomage Wars',
+'COMMON',
+'Counter target spell unless its controller pays 3.',
+'https://example.com/images/arcane_reflex.jpg',
+'Spell Disruption');
+
+INSERT INTO User
+(username, email, passwordHash, role)
+VALUES
+('Gamer101',
+'veryGutAtGames@mail.com',
+'veryGoodpassword',
+'USER');
+
+INSERT INTO UserCollection (user_id, card_id) VALUES (1, 3);
