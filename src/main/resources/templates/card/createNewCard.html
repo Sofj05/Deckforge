@@ -1,13 +1,78 @@
 <!DOCTYPE html>
-<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
-    <title>Deckforge – Opret kort som admin</title>
-    <link rel="stylesheet" href="deckforge.css">
+    <title>Opret Nyt Kort</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+<h1>Opret et nyt kort</h1>
+
+<div class="create-card-container">
+
+    <form action="/cards/create" method="post" enctype="multipart/form-data" class="create-card-form">
+
+        <!-- NAVN -->
+        <label for="card_name">Kortnavn</label>
+        <input type="text" id="card_name" name="card_name" required>
+
+        <!-- CARD TYPE (ENUM) -->
+        <label for="cardType">Korttype</label>
+        <select id="cardType" name="cardType" required>
+            <option value="CREATURE">Creature</option>
+            <option value="LAND">Land</option>
+            <option value="INSTANT">Instant</option>
+            <option value="SORCERY">Sorcery</option>
+            <option value="ARTIFACT">Artifact</option>
+            <option value="ENCHANTMENT">Enchantment</option>
+            <option value="PLANESWALKER">Planeswalker</option>
+        </select>
+
+        <!-- MANA (ENUM) -->
+        <label for="mana">Mana</label>
+        <select id="mana" name="mana" required>
+            <option value="WHITE">White</option>
+            <option value="BLUE">Blue</option>
+            <option value="BLACK">Black</option>
+            <option value="RED">Red</option>
+            <option value="GREEN">Green</option>
+            <option value="NEUTRAL">Neutral / Colorless</option>
+        </select>
+
+        <!-- SET NAVN -->
+        <label for="nameOfSet">Sæt</label>
+        <input type="text" id="nameOfSet" name="nameOfSet" required>
+
+        <!-- RARITY (ENUM) -->
+        <label for="rarity">Rarity</label>
+        <select id="rarity" name="rarity" required>
+            <option value="COMMON">Common</option>
+            <option value="UNCOMMON">Uncommon</option>
+            <option value="RARE">Rare</option>
+            <option value="MYTHICRARE">Mythic Rare</option>
+        </select>
+
+        <!-- RULE TEXT -->
+        <label for="ruleText">Rules / Abilities</label>
+        <textarea id="ruleText" name="ruleText" rows="5"
+                  placeholder="Flying, lifelink | Pay 7 life: Draw seven cards."></textarea>
+
+        <!-- ABILITY (separat felt i SQL) -->
+        <label for="ability">Ability (kort tekst)</label>
+        <input type="text" id="ability" name="ability" placeholder="Flying, Lifelink" required>
+
+        <!-- BILLEDE -->
+        <label for="image">Kortbillede</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn-create">Opret kort</button>
+
+    </form>
+
+</div>
 
 </body>
 </html>

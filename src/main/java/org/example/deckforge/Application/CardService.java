@@ -54,4 +54,6 @@ public class CardService {
     }
 
 
+    public void createCard(String cardName, String cardType, String mana, String nameOfSet, String rarity, String ruleText, String ability, String fileName) {
+    }
 }

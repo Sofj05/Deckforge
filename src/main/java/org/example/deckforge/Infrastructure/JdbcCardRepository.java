@@ -126,6 +126,7 @@ public class JdbcCardRepository implements ICardRepository {
                 card.getAbility()
         );
     }
+
     @Override
     public void readCard(Card card){}
 

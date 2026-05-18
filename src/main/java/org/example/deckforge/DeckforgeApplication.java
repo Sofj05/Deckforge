@@ -10,5 +10,4 @@ public class DeckforgeApplication {
         SpringApplication.run(DeckforgeApplication.class, args);
     }
 
-
 }

@@ -42,7 +42,7 @@ public UserController(UserService userService, CardService cardService){
     public String registerUser(@ModelAttribute("user") User user, Model model) {
 
         userService.createUser(user); // Kalder service -> opretter brugeren
-        return "redirect:/user/home"; // Går tilbage til registerings formen
+        return "redirect:/user/login"; // Går tilbage til registerings formen
     }
 
     // ---- Login af bruger ---- //
@@ -70,7 +70,7 @@ public UserController(UserService userService, CardService cardService){
         }
 
         session.setAttribute("loggedInUser", loggedInUser); // Gem bruger i session
-        return "redirect:/user/home";       // Send til home‑side
+        return "redirect:/user/profile";       // Send til home‑side
     }
 
 
