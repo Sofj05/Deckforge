@@ -39,7 +39,7 @@ class UserServiceTest {
 
         user.setUsername("testuser");
         user.setEmail("test@test.com");
-        user.setPasswordHash("password123");
+        user.setPassword("password123");
         user.setRole(Role.USER);
     }
 

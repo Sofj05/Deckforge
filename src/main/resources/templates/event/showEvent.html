@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Event information</title>
+
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<section class="hero">
+    <h1 th:text="${event.name}"></h1>
+</section>
+
+<section class="content container">
+    <h2>Event information</h2>
+
+    <div class="event-info">
+        <p><strong>Dato:</strong> <span th:text="${event.date}"></span></p>
+        <p><strong>Tidspunkt:</strong> <span th:text="${event.time}"></span></p>
+        <p><strong>Lokation:</strong> <span th:text="${event.location}"></span></p>
+        <p><strong>Arrangør:</strong> <span th:text="${event.organizer.username}"></span></p>
+        <p><strong>Antal deltagere:</strong> <span th:text="${event.maxParticipants}"></span></p>
+        <p><strong>Regler:</strong> <span th:text="${event.rules}"></span></p>
+        <p th:if="${event.format != null}"><strong>Format:</strong> <span th:text="${event.format}"></span>
+        </p>
+    </div>
+
+    <div class="event-participants" th:if="${participants != null and !#lists.isEmpty(participants)}">
+
+        <h3>Deltagere i eventet</h3>
+
+
+        <ul>
+            <li th:each="participant : ${participants}" th:text="${participant.username}">
+            </li>
+        </ul>
+
+    </div>
+
+</section>
+
+</body>
+</html>

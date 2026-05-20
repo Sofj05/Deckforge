@@ -51,6 +51,7 @@ public class JdbcUserRepository implements IUserRepository {
         );
     }
 
+
     // Har lavet en version af readUser, er dog usikker på om du vil have nogle ændringer eller ej - Sofie
     @Override
     public User readUser(User user) {

@@ -47,7 +47,7 @@ public class UserService {
             //Tjek for at sikre at brugeren har skrevet deres nuværende kode rigtigt
             boolean matches =  BCrypt.checkpw(currentPassword, dbUser.getPassword());
             if (!matches){
-                throw new RuntimeException("Nuværende kodeord er forkert"); //ændres?
+                throw new ValidationException("Nuværende kodeord er forkert");
             }
             user.setPassword(newPassword);
             hashPassword(user);

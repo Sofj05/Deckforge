@@ -1,55 +1,33 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Deckforge – Profil</title>
+    <title>Vælg kort – Deckforge</title>
 
-    <!-- Deckforge tema -->
     <link rel="stylesheet" href="/deckforge.css">
-
-    <!-- Magic-kort layout -->
     <link rel="stylesheet" href="/style.css">
+
 </head>
 
 <body>
 
-<!-- HERO -->
 <section class="hero">
-    <h1>Velkommen, <span th:text="${loggedInUser.username}"></span></h1>
-    <p>Her kan du se og administrere dine oplysninger og dine kort</p>
+    <h1>Tilføj kort til din samling</h1>
+    <p>Vælg antal af hvert kort</p>
 </section>
 
-<!-- PROFIL INFO -->
 <section class="content container">
-    <h2>Dine oplysninger</h2>
-
-    <p><strong>Brugernavn:</strong> <span th:text="${loggedInUser.username}"></span></p>
-
-    <form th:action="@{/users/update}" method="post">
-        <button type="submit" class="btn">Rediger profil</button>
-    </form>
-
-    <a class="btn danger" th:href="@{/users/deleteConfirmation}">
-        Slet min konto
-    </a>
-</section>
-
-<!-- DINE KORT (MAGIC-KORT LAYOUT) -->
-<section class="content container">
-    <h1>Dine kort</h1>
 
     <div class="card-container">
 
-
-        <!-- LOOP GENNEM KORT -->
+        <!-- LOOP ALLE KORT -->
         <div class="card-item"
-             th:each="card : ${cards}"
+             th:each="card : ${allCards}"
              th:attr="data-mana=${card.mana},
                       data-set=${card.nameOfSet},
                       data-rarity=${card.rarity},
                       data-type=${card.cardtype},
-                      data-ability=${card.ability},
-                      data-rule=${card.ruleText}">
+                      data-abilitie=${card.ability}">
 
             <!-- HEADER -->
             <div class="card-header">
@@ -58,15 +36,41 @@ DOCTYPE html>
 
             <!-- BILLEDE -->
             <div class="card-image">
-                <img th:src="${card.image}" th:alt="${card.name}">
+                <img th:src="@{'/uploads/' + ${card.image}}" th:alt="${card.name}">
             </div>
 
-            <!-- STATUS -->
-            <div class="card-status owned">Ejet</div>
+            <!-- TYPE -->
+            <div class="card-type" th:text="${card.cardtype}"></div>
+
+            <!-- RULES -->
+            <div class="card-rules">
+                <p th:text="${card.ruleText}"></p>
+            </div>
+
+            <!-- BUNDLINJE -->
+            <div class="card-bottom">
+                <div class="rarity-box" th:text="${card.rarity.substring(0,1)}"></div>
+                <div class="pt-box">—</div>
+            </div>
+
+            <!-- + / – vælger -->
+            <div class="choose-controls">
+                <button type="button" onclick="changeAmount(this, -1, event)">–</button>
+                <input type="number" value="0" min="0" max="999" readonly>
+                <button type="button" onclick="changeAmount(this, +1, event)">+</button>
+            </div>
+
+            <!-- TILFØJ TIL SAMLING -->
+            <form th:action="@{/user/addCard}" method="post">
+                <input type="hidden" name="cardId" th:value="${card.id}">
+                <input type="hidden" name="amount" value="0">
+                <button class="btn-add" type="submit">Tilføj til samling</button>
+            </form>
 
         </div>
 
     </div>
+
 </section>
 
 <!-- MODAL -->
@@ -78,19 +82,39 @@ DOCTYPE html>
 
         <p><strong>Type:</strong> <span id="modal-type"></span></p>
         <p><strong>Mana:</strong> <span id="modal-mana"></span></p>
-        <p><strong>Set:</strong> <span id="modal-set"></span></p>
+        <p><strong>Sæt:</strong> <span id="modal-set"></span></p>
         <p><strong>Rarity:</strong> <span id="modal-rarity"></span></p>
-        <p><strong>Abilities:</strong> <span id="modal-ability"></span></p>
-        <p><strong>Rules:</strong> <span id="modal-rule"></span></p>
+        <p><strong>Abilities:</strong> <span id="modal-abilitie"></span></p>
 
     </div>
 </div>
 
 <script>
     // ---------------------------
+    // + / – funktion
+    // ---------------------------
+    function changeAmount(button, delta, event) {
+        if (event) {
+            event.stopPropagation(); // vigtigt: forhindrer modal-click
+        }
+
+        const input = button.parentElement.querySelector("input");
+        let value = parseInt(input.value) + delta;
+
+        if (value < 0) value = 0;
+        if (value > 999) value = 999;
+
+        input.value = value;
+
+        const form = button.closest(".card-item").querySelector("form");
+        form.querySelector("input[name='amount']").value = value;
+    }
+
+    // ---------------------------
     // Mana converter
     // ---------------------------
     function convertMana(cost) {
+        if (!cost) return "";
         let html = "";
         const matches = cost.match(/\{(.*?)\}/g);
         if (!matches) return cost;
@@ -110,6 +134,7 @@ DOCTYPE html>
     // Rarity color converter
     // ---------------------------
     function rarityColor(r) {
+        if (!r) return "";
         const key = r.toLowerCase();
         return `<span class="rarity-${key}">${r}</span>`;
     }
@@ -127,19 +152,7 @@ DOCTYPE html>
     }
 
     // ---------------------------
-    // Ability formatter
-    // ---------------------------
-    function formatrules(text) {
-        if (!text) return "";
-        const rules = text.split("|")
-let html = "";
-        rules.forEach(a => html += `${a.trim()}</li>`);
-        html += "</ul>";
-        return html;
-    }
-
-    // ---------------------------
-    // Card click handler
+    // Modal åbner
     // ---------------------------
     document.querySelectorAll('.card-item').forEach(card => {
         card.addEventListener('click', () => {
@@ -151,27 +164,17 @@ let html = "";
                 card.querySelector('.card-image img').src;
 
             document.getElementById('modal-type').innerText = card.dataset.type;
-
-            document.getElementById('modal-mana').innerHTML =
-                convertMana(card.dataset.mana);
-
+            document.getElementById('modal-mana').innerHTML = convertMana(card.dataset.mana);
             document.getElementById('modal-set').innerText = card.dataset.set;
-
-            document.getElementById('modal-rarity').innerHTML =
-                rarityColor(card.dataset.rarity);
-
-            document.getElementById('modal-ability').innerHTML =
-                formatAbilities(card.dataset.ability);
-
-            document.getElementById('modal-rule').innerHTML =
-                formatrules(card.dataset.rule);
+            document.getElementById('modal-rarity').innerHTML = rarityColor(card.dataset.rarity);
+            document.getElementById('modal-abilitie').innerHTML = formatAbilities(card.dataset.abilitie);
 
             document.getElementById('card-modal').style.display = 'flex';
         });
     });
 
     // ---------------------------
-    // Close modal
+    // Modal lukker
     // ---------------------------
     document.getElementById('card-modal').addEventListener('click', (e) => {
         if (e.target === e.currentTarget) {

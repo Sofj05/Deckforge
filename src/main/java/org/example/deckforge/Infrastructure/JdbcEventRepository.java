@@ -219,4 +219,42 @@ Event e = new Event();
             return null;
         }
     }
+    
+    public List<Integer> getParticipantsForEvent(Event event){
+        String sql = """
+                SELECT 
+                    user_id
+                FROM 
+                    Participants
+                WHERE 
+                    event_id = ?
+        """;
+        try {
+            return jdbcTemp.queryForList(sql, Integer.class, event.getId());
+        } catch (DataAccessException e){
+            return null;
+        }
+    }
+
+
+    public void addParticipant(Event event, User user){
+        String sql = """
+                INSERT INTO Participants
+                (event_id, user_id)
+                VALUES(?, ?)
+        """;
+
+        try {
+            jdbcTemp.update(sql,
+                event.getId(),
+                user.getId()
+                );
+        } catch (EmptyResultDataAccessException e){
+
+     }
+    }
+
+
+
 }
+

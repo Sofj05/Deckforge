@@ -8,6 +8,7 @@ import org.example.deckforge.Domain.Enums.Role;
 import org.example.deckforge.Domain.Repository.ICardRepository;
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.User;
+import org.example.deckforge.Infrastructure.JdbcCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +74,9 @@ public class CardService {
 
         // Gem i database
         cRepo.addNewCard(card);
+    }
+
+    public List<Card> getFirstThreeCards() {
+        return cRepo.getFirstThreeCards();
     }
 }

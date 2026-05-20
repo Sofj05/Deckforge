@@ -80,6 +80,12 @@ public UserController(UserService userService, CardService cardService){
     }
     }
 
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+
     @GetMapping("/profile")
     public String home(HttpSession session, Model model){
         if (!AuthHelper.isLoggedIn(session)) {

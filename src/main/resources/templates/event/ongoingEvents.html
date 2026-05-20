@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kommende events</title>
+
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="hero">
+    <h1>Kommende events</h1>
+    <p>Se events oprettet af brugere på Deckforge</p>
+</section>
+
+<section class="content container">
+    <h1>Liste over events på Deckforge</h1>
+
+    <div class="event-card-container">
+        <div class="event-card" th:each="event : ${events}">
+            <h3 th:text="${event.name}"></h3>
+
+            <p>
+                <strong>Arrangør:</strong>
+                <span th:text="${event.organizer.username}"></span>
+            </p>
+
+            <p>
+                <strong>Dato:</strong>
+                <span th:text="${event.date}"></span>
+            </p>
+
+            <p>
+                <strong>Tid:</strong>
+                <span th:text="${event.time}"></span>
+            </p>
+
+            <div class="event-card-actions">
+
+                <a th:href="@{/event/showEvent/{id}(id=${event.id})}"
+                   class="btn small">
+                    Se info
+                </a>
+
+<!-- MANGLER KNAP TIL AT MELDE SIG TIL EVENTET! -->
+                <!-- ACCEPT -->
+                <form th:action="@{/event/participate/{id}(id=${event.id})}"
+                      method="post">
+                    <input type="hidden"
+                           name="decision"
+                           value="yes">
+                    <button type="submit"
+                            class="btn small"
+                            onclick="return confirm('Tilmeld dig dette event?')">
+                        Tilmeld
+                    </button>
+                </form>
+
+                <p th:if="${error != null}"
+                   th:text="${error}"
+                   style="color:red;">
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+</body>
+</html>

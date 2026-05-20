@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.example.deckforge.Application.CardService;
 import org.example.deckforge.Application.UserService;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,3 +68,4 @@ public class CardController {
         return "redirect:/cards"; // tilbage til kortoversigten
     }
 }
+

@@ -185,10 +185,10 @@ body {
 
 /* Farver for mana */
 .mana-W { background: #f8f4e6; color: black; }
-.mana-U { background: #4aa8ff; }
+.mana-U { background: #5799d6; }
 .mana-B { background: #3a3a3a; }
-.mana-R { background: #d13f2a; }
-.mana-G { background: #3c8c3c; }
+.mana-R { background: #c54b3a; }
+.mana-G { background: #62ba62; }
 .mana-C { background: #bfbfbf; color: black; }
 
 /* Numbers */
@@ -311,4 +311,367 @@ h1 {
 .hero p {
     font-size: 0.9rem !important;
     opacity: 0.85;
+}
+
+/* --- style til event kort --- */
+.event-card-container {
+    display: grid;
+    grid-template-columns:
+            repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background: #2c313a;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #6366f1; /* lilla accent */
+    transition: 0.2s ease;
+}
+
+.event-card:hover {
+    background: #323843;
+    transform: translateY(-3px);
+}
+
+.event-card h3 {
+    margin-top: 0;
+    color: #c7d2fe; /* lysere lilla */
+}
+
+/* Checkbox styling */
+.checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    transform: scale(1.15);
+    accent-color: #6366f1;
+}
+
+
+
+/* --- FORM STYLING (Deckforge) --- */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #c7d2fe; /* lys lilla */
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
+    color: #e5e7eb;
+    font-size: 1rem;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #6366f1;
+    background: #1f2430;
+    outline: none;
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
+}
+
+/* --- FORM ELEMENTS CONSISTENCY --- */
+/* også så det passer til opret af event */
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
+    color: #e5e7eb;
+    font-size: 1rem;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #6366f1;
+    background: #1f2430;
+    outline: none;
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
+}
+
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
+    color: #e5e7eb;
+    font-size: 1rem;
+    transition: 0.2s ease;
+}
+.form-group select {
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #3b4250;
+    background: #1b1e24;
+    color: #e5e7eb;
+    font-size: 1rem;
+    line-height: 44px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+/* focus (samme som input) */
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #6366f1;
+    background: #1f2430;
+    outline: none;
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
+}
+/* textarea lidt pænere */
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- VÆLG KORT (+ / - / antal) --- */
+
+.choose-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.choose-controls button {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #3b82f6;
+    color: white;
+    transition: 0.15s ease;
+}
+
+.choose-controls button:hover {
+    background: #2563eb;
+}
+
+.choose-controls input {
+    width: 50px;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: #1b1e24;
+    color: white;
+}
+
+/* Tilføj-knap */
+.btn-add {
+    margin-top: 10px;
+    background: #3b82f6;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    transition: 0.15s ease;
+}
+
+.btn-add:hover {
+    background: #2563eb;
+}
+
+/*-- Man kan ikke klikke på antal som værende en knap --*/
+.choose-controls input {
+    pointer-events: none;
+}
+
+/* -- Der vises kun 3 kort pr. række -- */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 kort pr. række */
+    gap: 20px;
+    padding: 20px;
+
+    /* Centrerer sidste række hvis der er 1 eller 2 kort */
+    justify-items: center;
+}
+
+@media (max-width: 900px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 kort pr. række */
+    }
+}
+
+@media (max-width: 600px) {
+    .card-container {
+        grid-template-columns: repeat(1, 1fr); /* 1 kort pr. række */
+    }
+}
+
+/* --- EVENT INFO SIDE --- */
+
+/* Layout mellem info + deltagere */
+.event-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* --- EVENT INFO BOKS --- */
+.event-info {
+    flex: 2;
+
+    background: #242830;
+    border-radius: 14px;
+    padding: 24px;
+
+    color: #e5e7eb;
+
+    border: 1px solid #3b4250;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.event-info p {
+    margin: 14px 0;
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid #3b4250;
+
+    line-height: 1.5rem;
+}
+
+.event-info p:last-child {
+    border-bottom: none;
+}
+
+.event-info strong {
+    color: #c7d2fe;
+    margin-right: 6px;
+}
+
+/* --- DELTAGER LISTE --- */
+.event-participants {
+    flex: 1;
+
+    background: #242830;
+    border-radius: 14px;
+    padding: 20px;
+
+    border: 1px solid #3b4250;
+
+    color: #e5e7eb;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+/* Titel */
+.event-participants h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+
+    color: #c7d2fe;
+
+    border-bottom: 1px solid #3b4250;
+    padding-bottom: 10px;
+}
+
+/* Liste */
+.event-participants ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Bruger element */
+.event-participants li {
+    padding: 12px;
+    margin-bottom: 10px;
+
+    background: #1b1e24;
+
+    border-radius: 8px;
+
+    border: 1px solid #3b4250;
+
+    transition: 0.15s ease;
+}
+
+/* Hover */
+.event-participants li:hover {
+    background: #1f2430;
+    transform: translateX(3px);
+}
+
+/* Scrollbar styling */
+.event-participants::-webkit-scrollbar {
+    width: 8px;
+}
+
+.event-participants::-webkit-scrollbar-track {
+    background: #1b1e24;
+    border-radius: 10px;
+}
+
+.event-participants::-webkit-scrollbar-thumb {
+    background: #6366f1;
+    border-radius: 10px;
+}
+
+/* --- RESPONSIV --- */
+@media (max-width: 900px) {
+
+    .event-layout {
+        flex-direction: column;
+    }
+
+    .event-info,
+    .event-participants {
+        width: 100%;
+    }
+
+    .event-participants {
+        max-height: 300px;
+    }
+}
+
+/* Mere plads (padding) på hver side af de yderste kort på profile.html */
+.content.container {
+    background: #242830;
+    padding-left: 60px;
+    padding-right: 60px;
+    border-radius: 12px;
 }

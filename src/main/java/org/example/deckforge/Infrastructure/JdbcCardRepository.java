@@ -127,7 +127,30 @@ public class JdbcCardRepository implements ICardRepository {
     }
 
     @Override
-    public void readCard(Card card){}
+    public Card readCard(Card card){
+        String sql = """
+                SELECT
+                id,
+                card_name,
+                cardType,
+                mana,
+                nameOfSet,
+                rarity,
+                ruleText,
+                image,
+                ability
+                FROM
+                card
+                WHERE
+                id = ?
+        """;
+
+        try {
+            return jdbcTemp.queryForObject(sql, cardRowMapper,card.getId());
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+        }
 
     @Override
     public void deleteCard(int id){
@@ -137,5 +160,23 @@ public class JdbcCardRepository implements ICardRepository {
                 """;
         jdbcTemp.update(sql, id);
     }
+
+    @Override
+    public List<Card> getFirstThreeCards() {
+        String sql = """
+                SELECT *
+                FROM card
+                ORDER BY card_id ASC
+                LIMIT 3
+                """;
+
+        try {
+            return jdbcTemp.query(sql, cardRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+
 
 }

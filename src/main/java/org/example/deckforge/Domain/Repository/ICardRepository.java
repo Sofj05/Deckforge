@@ -10,8 +10,9 @@ public interface ICardRepository {
 
     List<Card> getAllCards();
     List<Card> getCardsByUser(User user);
+    List<Card> getFirstThreeCards();
     Card getCardById(int id);
     void addNewCard(Card card);
-    void readCard(Card card);
+    Card readCard(Card card);
     void deleteCard(int id);
 }

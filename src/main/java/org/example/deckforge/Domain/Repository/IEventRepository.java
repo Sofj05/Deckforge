@@ -2,6 +2,7 @@ package org.example.deckforge.Domain.Repository;
 
 import org.example.deckforge.Domain.Enums.Status;
 import org.example.deckforge.Domain.Event;
+import org.example.deckforge.Domain.User;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface IEventRepository {
     List<Event> getEventsByStatus(Status status);
     int getParticipationCount(Event event);
     Event getEventById(int id);
+    List<Integer> getParticipantsForEvent(Event event);
+    void addParticipant(Event event, User user);
 }

@@ -60,11 +60,12 @@ public class EventController {
     }
 
 
-    // Get: Viser Event
+    // Get: Viser Event info
     @GetMapping("/showEvent/{id}")
     public String showEvent(@PathVariable Model model, int id) {
         Event event = eventService.getEventById(id);
         model.addAttribute("event", event);
+        model.addAttribute("participants", eventService.getParticipationList(event));
         return "/event/showEvent";
     }
 
@@ -72,7 +73,7 @@ public class EventController {
 
     // Get: Viser Opdater Event Form
     @GetMapping("/updateEvent/{id}")
-    public String showUpdateForm(@PathVariable Model model, int id) {
+    public String showUpdateForm(Model model, int id) {
         Event event = eventService.getEventById(id);
         model.addAttribute("event", event);
         return "/event/updateEvent";
@@ -101,8 +102,36 @@ public class EventController {
 
     }
 
+    //GET: se kommende events
+    @GetMapping("/ongoingEvents")
+    public String ongoingEventsList(Model model){
+        model.addAttribute("events",eventService.getOngoingEvents());
+        return "event/ongoingEvents";
+    }
+
+
+
+    //POST: Handling der udføres for at fortælle om man kan tilmelde sig eventet
+    @PostMapping("/participate/{id}")
+    public String approveEvent(@PathVariable int id, HttpSession session, Model model){
+        Event event = eventService.getEventById(id);
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+        try {
+            eventService.participateEvent(event, loggedInUser);
+        } catch (Exception ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+        return "redirect:/event/ongoingEvents";
+    }
+
+
+
+
+
+
 
 
 
 
 }
+

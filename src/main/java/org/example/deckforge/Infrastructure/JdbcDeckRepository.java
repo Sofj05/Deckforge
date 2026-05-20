@@ -1,12 +1,19 @@
 package org.example.deckforge.Infrastructure;
 
+import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
+import org.example.deckforge.Domain.Enums.Decktype;
 import org.example.deckforge.Domain.Repository.IDeckRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.text.Format;
+import java.util.Arrays;
+import java.util.List;
 
 @Repository
 public class JdbcDeckRepository implements IDeckRepository {
@@ -15,11 +22,49 @@ public class JdbcDeckRepository implements IDeckRepository {
 
     public JdbcDeckRepository(JdbcTemplate jdbcTemp){ this.jdbcTemp = jdbcTemp; }
 
-    @Override
-    public void createDeck(Deck deck) {}
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void readDeck(Deck deck) {}
+    public void createDeck(Deck deck) {
+        String sql = """
+                INSERT INTO Deck
+                (name, format, cards)
+                Values(?, ?, ?)
+                """;
+
+        jdbcTemp.update(sql,
+                deck.getName(),
+                deck.getFormat(),
+                deck.getCards()
+                );
+    }
+
+    @Override
+    public Deck readDeck(Deck deck) {
+        String sql = """
+                SELECT
+                id,
+                name,
+                format,
+                cards
+                FROM
+                deck
+                WHERE
+                id = ?
+                """;
+        try {
+            return jdbcTemp.queryForObject(sql, (rs, rowNm) -> {
+            Deck d = new Deck();
+            d.setId(rs.getInt("id"));
+            d.setName(rs.getString("name"));
+            d.setFormat(Decktype.valueOf(rs.getString("format")));
+                d.setCards(objectMapper.readValue(rs.getString("cards"), new TypeReference<List<Card>>() {}));
+            return d;
+            }, deck.getId());
+        }  catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 
     @Override
     public void updateDeck(int id, Deck deck) {

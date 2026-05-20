@@ -10,6 +10,7 @@ import org.example.deckforge.Domain.Repository.IEventRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,20 +44,17 @@ public class EventService {
 
     public List<Event> getOngoingEvents(){
         Status status = Status.ONGOING;
-        return eRepo.getEventsByStatus(status);
+        List<Event> events = eRepo.getEventsByStatus(status);
+        setOrganizer(events);
+        return events;
     }
 
     public List<Event> getProcessingEvents(){
         Status status = Status.PROCESSING;
 
         List<Event> events = eRepo.getEventsByStatus(status);
-        for (Event event : events){
-            User organizer = userService.getUserById(event.getOrganizer().getId());
-            if (organizer != null) {
-                event.setOrganizer(organizer);
-            }
-        }
-        return eRepo.getEventsByStatus(status);
+        setOrganizer(events);
+        return events;
     }
 
     public void updateEvent(int id, Event event) {
@@ -84,12 +82,38 @@ public class EventService {
     }
 
     public void completeEvent(Event event, User user){
-        //Lav status om til completed og/eller giv vinder på dem der vandt + validering på at det er arrangøren der gør dette
+        //Lav status om til completed og evt. giv vinder på dem der vandt + validering på at det er arrangøren der gør dette
 
     }
 
     public void participateEvent(Event event, User user){
-        //Metode til at tilføje brugere i eventet
+        //Metode til at tilføje brugere i eventet WIP?
+        int now = eRepo.getParticipationCount(event);
+        if (now >= event.getMaxParticipants()){
+            throw new ValidationException("Der er ikke flere pladser til dette event");
+        }
+        eRepo.addParticipant(event, user);
+    }
+    
+    public List<User> getParticipationList(Event event){
+        List<Integer> participantionList = eRepo.getParticipantsForEvent(event);
+        List<User> participants = new ArrayList<>();
+
+        //Da kun deltagernes id bliver hentet, skal man lige sætte brugerne på
+        for (Integer id : participantionList){
+            participants.add(userService.getUserById(id));
+        }
+        return participants;
+    }
+
+    //Lille privat metode til at sette arrangøren da den kun henter id fra db i EventRepository
+    private void setOrganizer(List<Event> events){
+        for (Event event : events){
+            User organizer = userService.getUserById(event.getOrganizer().getId());
+            if (organizer != null) {
+                event.setOrganizer(organizer);
+            }
+        }
     }
 
 
