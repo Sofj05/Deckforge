@@ -45,7 +45,7 @@ public class CardService {
     }
 
     public List<Card> getAllCards() {
-        return cRepo.getAllCards();
+        return null;
     }
 
     public List<Card> getCardsByUser(User user) {

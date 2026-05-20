@@ -108,5 +108,39 @@ public UserController(UserService userService, CardService cardService){
         return "user/usersCards";
     }
 
+    @GetMapping("/updateUser")
+    public String updateUser(HttpSession session, Model model) {
+        if (!AuthHelper.isLoggedIn(session)) {
+            return "redirect:/user/login";
+        }
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+        model.addAttribute("loggedInUser", loggedInUser);
+        return "user/updateUser";
+    }
+
+    @PostMapping("/updateUser")
+    public String updateUser(@RequestParam String username,
+                             @RequestParam String email,
+                             @RequestParam(required = false) String currentPassword,
+                             @RequestParam(required = false) String newPassword,
+                             HttpSession session,
+                             Model model){
+        User user = AuthHelper.getLoggedIn(session);
+
+        user.setUsername(username);
+        user.setEmail(email);
+
+        //Bruges til at fortælle om brugeren har ændret deres kode eller ej
+        boolean updPass = newPassword != null && !newPassword.isBlank();
+
+        try {
+            userService.updateUser(user, currentPassword, newPassword, updPass);
+            model.addAttribute("success", "Profil opdateret!");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "redirect:/user/profile";
+    }
+
 
 }

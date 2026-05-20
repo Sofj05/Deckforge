@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rediger profil</title>
+
+    <link rel="stylesheet" href="deckforge.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="hero">
+    <h1>Rediger din profil</h1>
+    <p>Opdater dine brugeroplysninger her</p>
+</section>
+
+<section class="content container">
+
+    <form th:action="@{/user/updateUser}" method="post" class="form">
+
+        <div class="form-group">
+            <label for="name">Brugernavn</label>
+            <input type="text"
+                   id="name"
+                   name="username"
+                   th:value="${session.loggedInUser.username}"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   th:value="${session.loggedInUser.email}"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox"
+                       id="changePassword"
+                       onchange="togglePasswordFields()">
+                Skift kodeord
+            </label>
+        </div>
+
+        <div id="passwordFields" style="display:none;">
+
+            <div class="form-group">
+                <label for="currentPassword">Nuværende kodeord</label>
+
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="password"
+                           id="currentPassword"
+                           name="currentPassword">
+
+                    <button type="button"
+                            onclick="togglePasswordVisibility('currentPassword')">
+                        👁
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword">Nyt kodeord</label>
+
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="password"
+                           id="newPassword"
+                           name="newPassword">
+
+                    <button type="button"
+                            onclick="togglePasswordVisibility('newPassword')">
+                        👁
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="btn" type="submit">
+            Gem ændringer
+        </button>
+
+        <p th:if="${error != null}"
+           th:text="${error}"
+           style="color:red;">
+        </p>
+
+        <p th:if="${success != null}"
+           th:text="${success}"
+           style="color:green;">
+        </p>
+
+    </form>
+
+</section>
+
+<script>
+
+    function togglePasswordFields() {
+        const checkbox = document.getElementById("changePassword");
+        const fields = document.getElementById("passwordFields");
+
+        fields.style.display = checkbox.checked ? "block" : "none";
+    }
+
+    function togglePasswordVisibility(id) {
+        const input = document.getElementById(id);
+
+        input.type =
+            input.type === "password"
+                ? "text"
+                : "password";
+    }
+
+    window.onload = togglePasswordFields;
+
+</script>
+
+</body>
+</html>

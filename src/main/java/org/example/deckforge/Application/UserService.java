@@ -38,11 +38,32 @@ public class UserService {
         uRepo.readUser(user);
     }
 
-    public void updateUser(User user, Boolean updPass) {
+    public void updateUser(User user, String currentPassword, String newPassword, Boolean updPass) {
         validation.validateUser(user);
         if (updPass){
+
+            User dbUser = uRepo.readUser(user);
+
+            //Tjek for at sikre at brugeren har skrevet deres nuværende kode rigtigt
+            boolean matches =  BCrypt.checkpw(currentPassword, dbUser.getPassword());
+            if (!matches){
+                throw new RuntimeException("Nuværende kodeord er forkert"); //ændres?
+            }
+            user.setPassword(newPassword);
             hashPassword(user);
         }
+
+        //Tjek til at sikre at man ikke har dobbelt brugernavn nogle steder
+        User existingUser = uRepo.getUserByUsername(user.getUsername());
+        if (existingUser != null && existingUser.getId() != user.getId()) { //Sidste parameter bruges til at sige at brugeren godt må beholde sit eget brugernavn
+            throw new RuntimeException("Brugernavnet er allerede taget");
+        }
+        //Tjek til at sikre at man ikke bruger den samme mail som en anden profil
+        User existingEmail = uRepo.getUserByEmail(user.getEmail());
+        if (existingEmail != null && existingEmail.getId() != user.getId()) {
+            throw new RuntimeException("Email er allerede i brug");
+        }
+
         uRepo.updateUser(user.getId(), user);
     }
 

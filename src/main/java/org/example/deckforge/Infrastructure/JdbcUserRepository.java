@@ -1,10 +1,14 @@
 package org.example.deckforge.Infrastructure;
 
+import org.example.deckforge.Domain.Card;
+import org.example.deckforge.Domain.Enums.Cardtype;
+import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Enums.Role;
 import org.example.deckforge.Domain.Repository.IUserRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +21,19 @@ public class JdbcUserRepository implements IUserRepository {
     public JdbcUserRepository(JdbcTemplate jdbcTemp) {
         this.jdbcTemp = jdbcTemp;
     }
+
+    private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
+
+        User user = new User();
+
+        user.setId(rs.getInt("user_id"));
+        user.setUsername(rs.getString("username"));
+        user.setEmail(rs.getString("email"));
+        user.setPasswordHash(rs.getString("passwordhash"));
+        user.setRole(Role.valueOf(rs.getString("role")));
+
+        return user;
+    };
 
 
     @Override
@@ -87,6 +104,27 @@ public class JdbcUserRepository implements IUserRepository {
         }
 
     }
+
+    public User getUserByEmail(String email){
+        String sql = """
+                SELECT
+                    user_id, 
+                    username, 
+                    email, 
+                    passwordhash, 
+                    role
+                FROM user
+                WHERE email = ?
+        """;
+
+        try {
+            return jdbcTemp.queryForObject(sql, userRowMapper,  email);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+
+    }
+
 
 
     @Override
