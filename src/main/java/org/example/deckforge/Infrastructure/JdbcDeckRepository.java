@@ -40,28 +40,67 @@ public class JdbcDeckRepository implements IDeckRepository {
     public Deck getDeckByUser(User user) {
         String sql = """
                 SELECT
-                d.deck_id,
-                d.deck_name,
-                d.format,
-                d.user_id
-            FROM Deck d
-            JOIN User u
-                ON d.user_id = u.user_id
-            WHERE u.user_id = ?;
+                deck_id,
+                deck_name,
+                format,
+                user_id
+            FROM Deck
+            WHERE user_id = ?;
                 """;
         try {
             return jdbcTemp.queryForObject(sql, (rs, rowNm) -> {
-            Deck d = new Deck();
-            d.setId(rs.getInt("deck_id"));
-            d.setName(rs.getString("deck_name"));
-            d.setFormat(Decktype.valueOf(rs.getString("format")));
-                d.setCards(objectMapper.readValue(rs.getString("user_id"), new TypeReference<List<Card>>() {}));
-            return d;
+                Deck d = new Deck();
+                d.setId(rs.getInt("deck_id"));
+                d.setName(rs.getString("deck_name"));
+                d.setFormat(Decktype.valueOf(rs.getString("format")));
+                d.setUserId(rs.getInt("user_id"));
+                return d;
             }, user.getId());
         }  catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
+
+    public Deck getDeckById(int id) {
+        String sql = """
+                SELECT
+                d.deck_id,
+                d.deck_name,
+                d.format,
+                d.user_id
+            FROM Deck d
+            WHERE d.deck_id = ?;
+                """;
+        try {
+            return jdbcTemp.queryForObject(sql, (rs, rowNm) -> {
+                Deck d = new Deck();
+                d.setId(rs.getInt("deck_id"));
+                d.setName(rs.getString("deck_name"));
+                d.setFormat(Decktype.valueOf(rs.getString("format")));
+                d.setUserId(rs.getInt("user_id"));
+                return d;
+            }, id);
+        }  catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Card> getCardsInDeck(int deckId) {
+        String sql = """
+            SELECT c.* FROM Card c
+            JOIN DeckCard dc ON c.card_id = dc.card_id
+            WHERE dc.deck_id = ?
+            """;
+        return jdbcTemp.query(sql, (rs, rowNum) -> {
+            Card card = new Card();
+            card.setId(rs.getInt("card_id"));
+            card.setName(rs.getString("card_name"));
+            // ... set other card properties
+            return card;
+        }, deckId);
+    }
+
 
     @Override
     public void updateDeck(int id, Deck deck) {

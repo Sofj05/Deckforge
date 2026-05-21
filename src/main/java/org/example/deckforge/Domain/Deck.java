@@ -9,6 +9,7 @@ public class Deck {
     private String name;
     private Decktype format;
     private List<Card> cards;
+    private Integer userId;
 
     public Deck(){}
 
@@ -42,6 +43,13 @@ public class Deck {
     }
     public List<Card> getCards(){
         return cards;
+    }
+
+    public void setUserId(Integer userId){
+        this.userId = userId;
+    }
+    public Integer getUserId(){
+        return userId;
     }
 
 }

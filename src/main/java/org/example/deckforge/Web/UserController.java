@@ -76,6 +76,9 @@ public UserController(UserService userService, CardService cardService, DeckServ
             return "user/login"; // Gå tilbage til login
         }
 
+        loggedInUser.setPassword(null);
+        loggedInUser.setPasswordHash(null);
+
         session.setAttribute("loggedInUser", loggedInUser); // Gem bruger i session
         return "redirect:/user/profile";       // Send til profil‑side
     }catch (ValidationException e){
@@ -100,6 +103,8 @@ public UserController(UserService userService, CardService cardService, DeckServ
 
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
+        model.addAttribute("decks", deckService.getDeckByUser(loggedInUser));
+
         return "user/profile";
     }
 
@@ -123,9 +128,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
         if (!AuthHelper.isLoggedIn(session)) {
             return "redirect:/user/login";
         }
-
         User loggedInUser = AuthHelper.getLoggedIn(session);
-
         Deck deck = deckService.getDeckById(id);
         if (deck == null) {
             return "redirect:/user/profile";
