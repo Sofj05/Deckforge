@@ -32,6 +32,32 @@ DOCTYPE html>
     <a class="btn danger" th:href="@{/users/deleteConfirmation}">
         Slet min konto
     </a>
+
+
+</section>
+<!-- DINE Decks (DECK LAYOUT) -->
+<section class="content container">
+    <h1>Decks</h1>
+    <div class="card-container">
+
+        <!-- LOOP GENNEM DECKS -->
+        <div class="deck-item"
+             th:each="deck : ${decks}">
+            <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="deck-link">
+                <div class="deck-header">
+                    <h3 th:text="${deck.name}">Deck name</h3>
+                </div>
+
+                <div class="deck-meta">
+                    <p><strong>Format:</strong> <span th:text="${deck.format}">FORMAT</span></p>
+                    <p><strong>Cards:</strong>
+                        <span th:text="${#lists.size(deck.cards) == 0 ? (deck.cardCount != null ? deck.cardCount : 0) : #lists.size(deck.cards)}">0</span>
+                    </p>
+                </div>
+            </a>
+        </div>
+
+    </div>
 </section>
 
 <!-- DINE KORT (MAGIC-KORT LAYOUT) -->
@@ -61,8 +87,15 @@ DOCTYPE html>
                 <img th:src="${card.image}" th:alt="${card.name}">
             </div>
 
-            <!-- STATUS -->
-            <div class="card-status owned">Ejet</div>
+            <div class="card-bottom">
+                <!-- STATUS -->
+                <div class="card-status owned">
+                    Ejet
+                </div>
+                <div class="card-status quantity-owned">
+                    <span th:text="${card.quantity}"></span> stk.
+                </div>
+            </div>
 
         </div>
 

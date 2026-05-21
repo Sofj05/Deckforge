@@ -120,7 +120,7 @@ body {
     font-weight: bold;
     font-size: 0.9rem;
 }
-
+.card-status.quantity-owned { background: #2a2a2a; }
 .card-status.owned { background: #2e7d32; }
 .card-status.trade { background: #1565c0; }
 .card-status.missing { background: #b71c1c; }

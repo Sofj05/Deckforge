@@ -4,6 +4,7 @@ import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.Enums.Decktype;
 import org.example.deckforge.Domain.Interface.IDeckRepository;
+import org.example.deckforge.Domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,40 +25,39 @@ public class JdbcDeckRepository implements IDeckRepository {
     @Override
     public void createDeck(Deck deck) {
         String sql = """
-                INSERT INTO Deck
-                (name, format, cards)
-                Values(?, ?, ?)
+                INSERT INTO Deck (deck_name, format, user_id)
+                VALUES (?, ?, ?)
                 """;
 
         jdbcTemp.update(sql,
                 deck.getName(),
-                deck.getFormat(),
-                deck.getCards()
-                );
+                deck.getFormat() != null ? deck.getFormat().name() : null,
+                deck.getUserId()
+        );
     }
 
     @Override
-    public Deck readDeck(Deck deck) {
+    public Deck getDeckByUser(User user) {
         String sql = """
                 SELECT
-                id,
-                name,
-                format,
-                cards
-                FROM
-                deck
-                WHERE
-                id = ?
+                d.deck_id,
+                d.deck_name,
+                d.format,
+                d.user_id
+            FROM Deck d
+            JOIN User u
+                ON d.user_id = u.user_id
+            WHERE u.user_id = ?;
                 """;
         try {
             return jdbcTemp.queryForObject(sql, (rs, rowNm) -> {
             Deck d = new Deck();
-            d.setId(rs.getInt("id"));
-            d.setName(rs.getString("name"));
+            d.setId(rs.getInt("deck_id"));
+            d.setName(rs.getString("deck_name"));
             d.setFormat(Decktype.valueOf(rs.getString("format")));
-                d.setCards(objectMapper.readValue(rs.getString("cards"), new TypeReference<List<Card>>() {}));
+                d.setCards(objectMapper.readValue(rs.getString("user_id"), new TypeReference<List<Card>>() {}));
             return d;
-            }, deck.getId());
+            }, user.getId());
         }  catch (EmptyResultDataAccessException e) {
             return null;
         }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${deck.name} + ' — Deck'">Deck</title>
+  <link rel="stylesheet" href="/deckforge.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<section class="content container">
+  <a th:href="@{/user/profile}" class="btn">Back to profile</a>
+  <h1 th:text="${deck.name}">Deck name</h1>
+  <p><strong>Format:</strong> <span th:text="${deck.format}">FORMAT</span></p>
+  <p><strong>Card count:</strong>
+    <span th:text="${#lists.size(cards)}">0</span>
+  </p>
+
+  <div class="card-container">
+    <div class="card-item" th:each="card : ${cards}">
+      <div class="card-header">
+        <h3 class="card-name" th:text="${card.cardName}">Card name</h3>
+      </div>
+      <div class="card-image">
+        <img th:src="${card.image}" th:alt="${card.cardName}">
+      </div>
+      <div class="card-bottom">
+        <div class="card-status owned">Ejet</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

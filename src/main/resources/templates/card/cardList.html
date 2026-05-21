@@ -67,9 +67,18 @@
                 <button class="btn-add" type="submit">Tilføj til samling</button>
             </form>
 
-        </div>
+            <!---TILFØJ KNAP SOM LOADER 9 KORT--->
+            <button id="loadMoreBtn" class="btn-add" style="margin: 20px auto; display: block;">
+                Load flere kort
+            </button>
 
+        </div>
     </div>
+
+    <!-- KNAP SKAL STÅ HER -->
+    <button id="loadMoreBtn" class="btn-add" style="margin: 20px auto; display: block;">
+        Load flere kort
+    </button>
 
 </section>
 
@@ -90,6 +99,35 @@
 </div>
 
 <script>
+    // ---------------------------
+    // LOAD MORE – vis 9 kort ad gangen
+    // ---------------------------
+    const cards = Array.from(document.querySelectorAll(".card-item"));
+    let visibleCount = 9;
+
+    // Skjul alle kort først
+    cards.forEach(c => c.style.display = "none");
+
+    // Vis de første 9
+    function showCards() {
+        for (let i = 0; i < visibleCount && i < cards.length; i++) {
+            cards[i].style.display = "block";
+        }
+
+        // Skjul knappen hvis der ikke er flere kort
+        if (visibleCount >= cards.length) {
+            document.getElementById("loadMoreBtn").style.display = "none";
+        }
+    }
+
+    showCards();
+
+    // Når man klikker "Load flere"
+    document.getElementById("loadMoreBtn").addEventListener("click", () => {
+        visibleCount += 9;
+        showCards();
+    });
+
     // ---------------------------
     // + / – funktion
     // ---------------------------
@@ -174,14 +212,42 @@
     });
 
     // ---------------------------
+    // Modal når man tilføjer kort
+    // ---------------------------
+    document.querySelectorAll(".add-card-form").forEach(form => {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault(); // stop form submission
+
+            document.getElementById("add-modal").style.display = "flex";
+
+            // Når man trykker OK → send form
+            document.getElementById("closeAddModal").onclick = () => {
+                document.getElementById("add-modal").style.display = "none";
+                form.submit();
+            };
+        });
+    });
+
+    // ---------------------------
     // Modal lukker
     // ---------------------------
-    document.getElementById('card-modal').addEventListener('click', (e) => {
+    document.getElementById("add-modal").addEventListener("click", (e) => {
         if (e.target === e.currentTarget) {
-            e.currentTarget.style.display = 'none';
+            e.currentTarget.style.display = "none";
         }
     });
+
+
 </script>
+
+<!--- MODAL POP-UP (GENNEMFØRT TILFØJELSE AF KORT TIL SAMLING)--->
+<div id="add-modal" class="modal">
+    <div class="modal-content" style="max-width: 300px; text-align: center;">
+        <h3>Kort tilføjet!</h3>
+        <p>Dit kort er nu tilføjet til samlingen.</p>
+        <button id="closeAddModal" class="btn-add">OK</button>
+    </div>
+</div>
 
 </body>
 </html>

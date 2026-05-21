@@ -34,6 +34,7 @@ public class JdbcCardRepository implements ICardRepository {
         card.setRuleText(rs.getString("ruleText"));
         card.setImage(rs.getString("image"));
         card.setAbility(rs.getString("ability"));
+        card.setQuantity(rs.getInt("quantity"));
 
         return  card;
     };

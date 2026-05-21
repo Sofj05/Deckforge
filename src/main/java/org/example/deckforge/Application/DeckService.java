@@ -3,6 +3,7 @@ package org.example.deckforge.Application;
 import org.example.deckforge.Application.Validation.Validation;
 import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.Interface.IDeckRepository;
+import org.example.deckforge.Domain.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,9 +21,11 @@ public class DeckService {
         dRepo.createDeck(deck);
     }
 
-    public void readDeck(Deck deck) {
-        validation.validateDeck(deck);
-        dRepo.readDeck(deck);
+    public Deck getDeckByUser(User user) {
+        return dRepo.getDeckByUser(user);
+    }
+    public Deck getDeckById(int id) {
+        return dRepo.getDeckById(id);
     }
 
     public void updateDeck(int id, Deck deck) {

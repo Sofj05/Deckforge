@@ -13,6 +13,7 @@ public class Card {
     private String ruleText;
     private String image;
     private String ability;
+    private int quantity;
 
 
     public Card(){}
@@ -26,6 +27,7 @@ public class Card {
         this.ruleText = ruleText;
         this.image = image;
         this.ability = ability;
+        this.quantity = 1;
     }
 
     public void setId(int id){
@@ -87,4 +89,10 @@ public class Card {
     public void setAbility(String ability) { this.ability = ability; }
     public String getAbility() { return ability; }
 
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

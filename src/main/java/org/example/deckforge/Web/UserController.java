@@ -2,9 +2,11 @@ package org.example.deckforge.Web;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.deckforge.Application.CardService;
+import org.example.deckforge.Application.DeckService;
 import org.example.deckforge.Application.UserService;
 import org.example.deckforge.Application.Validation.AuthHelper;
 import org.example.deckforge.Application.Validation.ValidationException;
+import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController{
     private final UserService userService;
     private final CardService cardService;
+    private final DeckService deckService;
 
 
-public UserController(UserService userService, CardService cardService){
+public UserController(UserService userService, CardService cardService, DeckService deckService){
     this.userService = userService;
     this.cardService = cardService;
+    this.deckService = deckService;
 }
 
     @GetMapping("/")
@@ -110,10 +114,34 @@ public UserController(UserService userService, CardService cardService){
 
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
+        model.addAttribute("decks", deckService.getDeckByUser(loggedInUser));
 
         return "user/usersCards";
     }
+    @GetMapping("/deck/{id}")
+    public String viewDeck(@PathVariable int id, HttpSession session, Model model) {
+        if (!AuthHelper.isLoggedIn(session)) {
+            return "redirect:/user/login";
+        }
 
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+
+        Deck deck = deckService.getDeckById(id);
+        if (deck == null) {
+            return "redirect:/user/profile";
+        }
+
+        // optional: ensure the deck belongs to the logged in user (if Deck has getUserId)
+        if (deck.getUserId() != null && !deck.getUserId().equals(loggedInUser.getId())) {
+            return "redirect:/user/profile";
+        }
+
+        model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("deck", deck);
+        model.addAttribute("cards", deckService.getCardsInDeck(id)); // expects a list of cards for this deck id
+
+        return "user/deck";
+    }
     @GetMapping("/updateUser")
     public String updateUser(HttpSession session, Model model) {
         if (!AuthHelper.isLoggedIn(session)) {
