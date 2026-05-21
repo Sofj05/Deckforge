@@ -39,6 +39,24 @@ body {
     margin: 20px auto;
     font-family: 'Georgia', serif;
 }
+.deck-item{
+    width: 350px;
+    background: rgba(27, 27, 27, 0.91);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
+    margin: 20px auto;
+    font-family: 'Georgia', serif;
+}
 
 /* Hover state */
 .card-item:hover {
@@ -651,6 +669,69 @@ h1 {
     border-radius: 10px;
 }
 
+/* Mere plads (padding) på hver side af de yderste kort på profile.html */
+.content.container {
+    background: #242830;
+    padding-left: 60px;
+    padding-right: 60px;
+    border-radius: 12px;
+}
+
+/* Hører til vores header i toppen af hvores hjemmeside */
+.header {
+    height: 60px; /* eller den højde du ønsker */
+    display: flex;
+    align-items: center;
+    background-color: #1f2937;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+.nav-list a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-list a:hover {
+    text-decoration: underline;
+}
+
+/* --- Det logo der bliver vist --- */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%; /* matcher headerens højde */
+    text-decoration: none;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.logo-icon {
+    max-height: 160px;  /* samme som headerens højde */
+    width: auto;
+    display: block;
+    margin-top: 16px;
+}
+
 /* --- RESPONSIV --- */
 @media (max-width: 900px) {
 
@@ -667,11 +748,6 @@ h1 {
         max-height: 300px;
     }
 }
-
-/* Mere plads (padding) på hver side af de yderste kort på profile.html */
-.content.container {
-    background: #242830;
-    padding-left: 60px;
-    padding-right: 60px;
-    border-radius: 12px;
+.admin-box {
+    margin-right: 50px;
 }

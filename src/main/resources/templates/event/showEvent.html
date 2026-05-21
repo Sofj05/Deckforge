@@ -9,13 +9,41 @@
 
 </head>
 <body>
+<header class="header">
+    <div class="container nav-container">
+        <a href="#" class="logo">
+            <img src="Logo_Deckforge2.png" class="logo-icon" alt="Deckforge logo">
+        </a>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="#">Din Profil</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Alle Kort</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
 <section class="hero">
-    <h1 th:text="${event.name}"></h1>
+    <h1>Event information</h1>
 </section>
 
 <section class="content container">
-    <h2>Event information</h2>
+    <h2 th:text="${event.name}"></h2>
+    <form   id="participateForm"
+            th:action="@{/event/participate/{id}(id=${event.id})}"
+            method="post"
+            style="display:none;"> <!-- Gør så denne knap er skjult fra starten af -->
+        <input type="hidden"
+               name="decision"
+               value="yes">
+        <button type="submit"
+                class="btn small"
+                onclick="return confirm('Tilmeld dig dette event?')">
+            Tilmeld
+        </button>
+    </form>
 
     <div class="event-info">
         <p><strong>Dato:</strong> <span th:text="${event.date}"></span></p>
@@ -41,6 +69,15 @@
     </div>
 
 </section>
+
+<!--Bruges til at vise 'tilmeld' knappe hvis man åbner den fra 'ongoingEvents' siden -->
+<script>
+    const params = new URLSearchParams(window.location.search); // Denne linje hjælper med at tjekke hvad der står efter URL'en
+
+    if (params.get("from") === "ongoing") { // Læser URL parametren, det der blev sendt ind fra den html man var på før man trykkede ind på denne
+        document.getElementById("participateForm").style.display = "inline-block"; // Tager knappens id og ændrer dens udseende så man igen kan se knappen
+    }
+</script>
 
 </body>
 </html>

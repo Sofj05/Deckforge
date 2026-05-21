@@ -86,12 +86,19 @@ public class EventService {
     }
 
     public void participateEvent(Event event, User user){
-        //Metode til at tilføje brugere i eventet WIP?
+        //Sikrer at man ikke overskrider grænsen for deltagere
         int now = eRepo.getParticipationCount(event);
         if (now >= event.getMaxParticipants()){
-            throw new ValidationException("Der er ikke flere pladser til dette event");
+            throw new ValidationException("Ikke flere pladser");
         }
 
+        //Sikrer at brugeren ikke tilmeldes to gange
+        List<Integer> participationList = eRepo.getParticipantsForEvent(event);
+        for (Integer participation : participationList){
+            if (participation == user.getId()){
+                throw new ValidationException("Du er allerede tilmeldt");
+            }
+        }
         eRepo.addParticipant(event, user);
     }
     

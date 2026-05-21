@@ -39,13 +39,19 @@ public class UserService {
     }
 
     public void updateUser(User user, String currentPassword, String newPassword, Boolean updPass) {
-        validation.validateUser(user);
+        if (user.getUsername() == null || user.getUsername().equals("")){
+            throw new  ValidationException("Brugernavn skal udfyldes");
+        }
+        if (user.getEmail() == null || user.getEmail().equals("")){
+            throw new  ValidationException("Email skal udfyldes");
+        }
+
         if (updPass){
 
             User dbUser = uRepo.readUser(user);
 
             //Tjek for at sikre at brugeren har skrevet deres nuværende kode rigtigt
-            boolean matches =  BCrypt.checkpw(currentPassword, dbUser.getPassword());
+            boolean matches =  BCrypt.checkpw(currentPassword, dbUser.getPasswordHash());
             if (!matches){
                 throw new ValidationException("Nuværende kodeord er forkert");
             }

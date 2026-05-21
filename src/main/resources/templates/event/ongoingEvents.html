@@ -8,6 +8,21 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<header class="header">
+    <div class="container nav-container">
+        <a href="#" class="logo">
+            <img src="Logo_Deckforge2.png" class="logo-icon" alt="Deckforge logo">
+        </a>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="#">Din Profil</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Alle Kort</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
 <section class="hero">
     <h1>Kommende events</h1>
@@ -38,13 +53,13 @@
 
             <div class="event-card-actions">
 
-                <a th:href="@{/event/showEvent/{id}(id=${event.id})}"
+                <a th:href="@{/event/showEvent/{id}(id=${event.id}, from='ongoing')}"
                    class="btn small">
                     Se info
                 </a>
 
-<!-- MANGLER KNAP TIL AT MELDE SIG TIL EVENTET! -->
-                <!-- ACCEPT -->
+
+                <!-- Tilmed -->
                 <form th:action="@{/event/participate/{id}(id=${event.id})}"
                       method="post">
                     <input type="hidden"

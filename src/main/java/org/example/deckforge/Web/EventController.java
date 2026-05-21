@@ -51,10 +51,15 @@ public class EventController {
     @PostMapping("/approve/{id}")
     public String approveEvent(@PathVariable int id,
                                @RequestParam String decision,
-                               HttpSession session){
+                               HttpSession session,
+                               Model model){
         Event event = eventService.getEventById(id);
         User loggedInUser = AuthHelper.getLoggedIn(session);
-        eventService.approveEvent(loggedInUser, event, decision);
+        try {
+            eventService.approveEvent(loggedInUser, event, decision);
+        } catch (Exception ex){
+            model.addAttribute("error", ex.getMessage());
+        }
 
         return "redirect:/event/processingEvents";
     }
@@ -113,7 +118,7 @@ public class EventController {
 
     //POST: Handling der udføres for at fortælle om man kan tilmelde sig eventet
     @PostMapping("/participate/{id}")
-    public String approveEvent(@PathVariable int id, HttpSession session, Model model){
+    public String participateEvent(@PathVariable int id, HttpSession session, Model model){
         Event event = eventService.getEventById(id);
         User loggedInUser = AuthHelper.getLoggedIn(session);
         try {

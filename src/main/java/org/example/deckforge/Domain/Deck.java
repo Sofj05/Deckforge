@@ -11,6 +11,7 @@ public class Deck {
     private List<Card> cards;
     private Integer userId;
 
+
     public Deck(){}
 
     public Deck(String name, Decktype format, List<Card> cards){
@@ -50,6 +51,13 @@ public class Deck {
     }
     public Integer getUserId(){
         return userId;
+    }
+    public int getTotalCards() {
+        if (cards == null) return 0;
+
+        return cards.stream()
+                .mapToInt(Card::getQuantity)
+                .sum();
     }
 
 }

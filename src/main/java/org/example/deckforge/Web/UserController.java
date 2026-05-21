@@ -6,12 +6,15 @@ import org.example.deckforge.Application.DeckService;
 import org.example.deckforge.Application.UserService;
 import org.example.deckforge.Application.Validation.AuthHelper;
 import org.example.deckforge.Application.Validation.ValidationException;
+import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 
 @Controller
@@ -67,24 +70,25 @@ public UserController(UserService userService, CardService cardService, DeckServ
             HttpSession session, // Session til at gemme bruger i
             Model model) {
 
-    try {
 
-        User loggedInUser = userService.login(username, password); // Tjekker login
+        try {
 
-        if (loggedInUser == null) { // Hvis login fejler
-            model.addAttribute("error", "Forkert brugernavn eller adgangskode");
-            return "user/login"; // Gå tilbage til login
+            User loggedInUser = userService.login(username, password); // Tjekker login
+
+            if (loggedInUser == null) { // Hvis login fejler
+                model.addAttribute("error", "Forkert brugernavn eller adgangskode");
+                return "user/login"; // Gå tilbage til login
+            }
+
+            loggedInUser.setPassword(null);
+            loggedInUser.setPasswordHash(null);
+
+            session.setAttribute("loggedInUser", loggedInUser); // Gem bruger i session
+            return "redirect:/user/profile";       // Send til profil‑side
+        }catch (ValidationException e){
+            model.addAttribute("error", e.getMessage());
+            return "user/login";
         }
-
-        loggedInUser.setPassword(null);
-        loggedInUser.setPasswordHash(null);
-
-        session.setAttribute("loggedInUser", loggedInUser); // Gem bruger i session
-        return "redirect:/user/profile";       // Send til profil‑side
-    }catch (ValidationException e){
-        model.addAttribute("error", e.getMessage());
-        return "user/login";
-    }
     }
 
     @PostMapping("/logout")
@@ -103,7 +107,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
 
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
-        model.addAttribute("decks", deckService.getDeckByUser(loggedInUser));
+        model.addAttribute("decks", deckService.getDecksByUser(loggedInUser));
 
         return "user/profile";
     }
@@ -111,7 +115,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
     @GetMapping("/cards")
     public String userCards(HttpSession session, Model model) {
 
-        if (!AuthHelper.isLoggedIn(session)) {
+        if (!AuthHelper.isLoggedIn(session)){
             return "redirect:/user/login";
         }
 
@@ -119,12 +123,15 @@ public UserController(UserService userService, CardService cardService, DeckServ
 
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
-        model.addAttribute("decks", deckService.getDeckByUser(loggedInUser));
+        model.addAttribute("decks", deckService.getDecksByUser(loggedInUser));
 
         return "user/usersCards";
     }
     @GetMapping("/deck/{id}")
-    public String viewDeck(@PathVariable int id, HttpSession session, Model model) {
+    public String viewDeck(@PathVariable int id,
+                           HttpSession session,
+                           Model model) {
+
         if (!AuthHelper.isLoggedIn(session)) {
             return "redirect:/user/login";
         }
@@ -133,18 +140,25 @@ public UserController(UserService userService, CardService cardService, DeckServ
         if (deck == null) {
             return "redirect:/user/profile";
         }
-
-        // optional: ensure the deck belongs to the logged in user (if Deck has getUserId)
-        if (deck.getUserId() != null && !deck.getUserId().equals(loggedInUser.getId())) {
+        if (deck.getUserId() != null &&
+                !deck.getUserId().equals(loggedInUser.getId())) {
             return "redirect:/user/profile";
         }
 
+        List<Card> cards = deckService.getCardsInDeck(id);
+
+        int totalCards = cards.stream()
+                .mapToInt(Card::getQuantity)
+                .sum();
+
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("deck", deck);
-        model.addAttribute("cards", deckService.getCardsInDeck(id)); // expects a list of cards for this deck id
+        model.addAttribute("cards", cards);
+        model.addAttribute("totalCards", totalCards);
 
         return "user/deck";
     }
+
     @GetMapping("/updateUser")
     public String updateUser(HttpSession session, Model model) {
         if (!AuthHelper.isLoggedIn(session)) {
@@ -161,7 +175,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
                              @RequestParam(required = false) String currentPassword,
                              @RequestParam(required = false) String newPassword,
                              HttpSession session,
-                             Model model){
+                             RedirectAttributes redirectAttributes) {
         User user = AuthHelper.getLoggedIn(session);
 
         user.setUsername(username);
@@ -172,9 +186,12 @@ public UserController(UserService userService, CardService cardService, DeckServ
 
         try {
             userService.updateUser(user, currentPassword, newPassword, updPass);
-            model.addAttribute("success", "Profil opdateret!");
+            redirectAttributes.addFlashAttribute("success", "Profil opdateret");
+            //RedirectAttributes bruges til at vise meddelelser med til næste side
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            //RedirectAttributes bruges til at vise meddelelser inden redirect da den ikke ville nå at gemme det hvis det kun var model.attribute
+            return "redirect:/user/updateUser";
         }
         return "redirect:/user/profile";
     }

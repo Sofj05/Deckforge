@@ -52,7 +52,7 @@ public class JdbcUserRepository implements IUserRepository {
     public User readUser(User user) {
         String sql = """
                 SELECT user_id, username, email, passwordhash, role 
-                FROM users
+                FROM user
                 WHERE user_id = ?
         """;
 

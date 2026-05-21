@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,21 @@ DOCTYPE html>
 </head>
 
 <body>
+<header class="header">
+    <div class="container nav-container">
+        <a href="#" class="logo">
+            <img src="Logo_Deckforge2.png" class="logo-icon" alt="Deckforge logo">
+        </a>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="#">Din Profil</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Alle Kort</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
 <!-- HERO -->
 <section class="hero">
@@ -21,18 +36,36 @@ DOCTYPE html>
 
 <!-- PROFIL INFO -->
 <section class="content container">
-    <h2>Dine oplysninger</h2>
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+            <h2>Dine oplysninger</h2>
 
-    <p><strong>Brugernavn:</strong> <span th:text="${loggedInUser.username}"></span></p>
+            <p><strong>Brugernavn:</strong> <span th:text="${loggedInUser.username}"></span></p>
 
-    <form th:action="@{/users/update}" method="post">
-        <button type="submit" class="btn">Rediger profil</button>
-    </form>
+            <form th:action="@{/user/updateUser}" method="get" style="display:inline-block">
+                <button type="submit" class="btn">Rediger profil</button>
+            </form>
+            <p  th:if="${success != null}"
+                th:text="${success}"
+                style="display:inline-block; text-align:center; color:lightgreen;">
+            </p>
 
-    <a class="btn danger" th:href="@{/users/deleteConfirmation}">
-        Slet min konto
-    </a>
+            <br><br>
 
+            <a class="btn danger" th:href="@{/users/deleteConfirmation}">
+                Slet min konto
+            </a>
+        </div>
+
+        <div th:if="${loggedInUser.role.toString() == 'ADMIN'}" class="admin-box">
+            <h2>Admin handling</h2>
+            <form th:action="@{/event/processingEvents}" method="get">
+                <button type="submit" class="btn">Event behandling</button>
+            </form>
+
+        </div>
+
+    </div>
 
 </section>
 <!-- DINE Decks (DECK LAYOUT) -->
@@ -41,21 +74,21 @@ DOCTYPE html>
     <div class="card-container">
 
         <!-- LOOP GENNEM DECKS -->
-        <div class="deck-item"
+        <article class="deck-item"
              th:each="deck : ${decks}">
             <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="deck-link">
-                <div class="deck-header">
-                    <h3 th:text="${deck.name}">Deck name</h3>
-                </div>
 
-                <div class="deck-meta">
-                    <p><strong>Format:</strong> <span th:text="${deck.format}">FORMAT</span></p>
-                    <p><strong>Cards:</strong>
-                        <span th:text="${#lists.size(deck.cards) == 0 ? (deck.cardCount != null ? deck.cardCount : 0) : #lists.size(deck.cards)}">0</span>
-                    </p>
-                </div>
+                <header class="deck-header">
+                    <h3 th:text="${deck.name}">Deck name</h3>
+                </header>
+
+                <section class="deck-meta">
+                    <p>
+                        <strong>Format:</strong>
+                        <span th:text="${deck.format}">FORMAT</span></p>
+                </section>
             </a>
-        </div>
+        </article>
 
     </div>
 </section>
@@ -89,12 +122,12 @@ DOCTYPE html>
 
             <div class="card-bottom">
                 <!-- STATUS -->
-                <div class="card-status owned">
+                <span class="card-status owned">
                     Ejet
-                </div>
-                <div class="card-status quantity-owned">
+                </span>
+                <span class="card-status quantity-owned">
                     <span th:text="${card.quantity}"></span> stk.
-                </div>
+                </span>
             </div>
 
         </div>

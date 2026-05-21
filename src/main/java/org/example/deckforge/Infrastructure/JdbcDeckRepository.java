@@ -2,7 +2,9 @@ package org.example.deckforge.Infrastructure;
 
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
+import org.example.deckforge.Domain.Enums.Cardtype;
 import org.example.deckforge.Domain.Enums.Decktype;
+import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Interface.IDeckRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -88,15 +90,24 @@ public class JdbcDeckRepository implements IDeckRepository {
     @Override
     public List<Card> getCardsInDeck(int deckId) {
         String sql = """
-            SELECT c.* FROM Card c
-            JOIN DeckCard dc ON c.card_id = dc.card_id
-            WHERE dc.deck_id = ?
-            """;
+                SELECT c.card_id, c.card_name, c.cardType, c.mana, c.nameOfSet, c.rarity, 
+                       c.ruleText, c.image, c.ability, dc.quantity
+                FROM Card c
+                JOIN DeckCard dc ON c.card_id = dc.card_id
+                WHERE dc.deck_id = ?
+                """;
         return jdbcTemp.query(sql, (rs, rowNum) -> {
             Card card = new Card();
             card.setId(rs.getInt("card_id"));
             card.setName(rs.getString("card_name"));
-            // ... set other card properties
+            card.setCardtype(Cardtype.valueOf(rs.getString("cardType")));
+            card.setMana(rs.getString("mana"));
+            card.setNameOfSet(rs.getString("nameOfSet"));
+            card.setRarity(Rarity.valueOf(rs.getString("rarity")));
+            card.setRuleText(rs.getString("ruleText"));
+            card.setImage(rs.getString("image"));
+            card.setAbility(rs.getString("ability"));
+            card.setQuantity(rs.getInt("quantity"));
             return card;
         }, deckId);
     }

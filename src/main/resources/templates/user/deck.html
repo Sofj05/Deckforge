@@ -7,28 +7,54 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<header class="header">
+  <div class="container nav-container">
+    <a href="#" class="logo">
+      <img src="Logo_Deckforge2.png" class="logo-icon" alt="Deckforge logo">
+    </a>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="#">Din Profil</a></li>
+        <li><a href="#">Events</a></li>
+        <li><a href="#">Alle Kort</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
 <section class="content container">
   <a th:href="@{/user/profile}" class="btn">Back to profile</a>
   <h1 th:text="${deck.name}">Deck name</h1>
   <p><strong>Format:</strong> <span th:text="${deck.format}">FORMAT</span></p>
   <p><strong>Card count:</strong>
-    <span th:text="${#lists.size(cards)}">0</span>
+    <span th:text="${totalCards}">0</span>
   </p>
 
-  <div class="card-container">
-    <div class="card-item" th:each="card : ${cards}">
-      <div class="card-header">
-        <h3 class="card-name" th:text="${card.cardName}">Card name</h3>
-      </div>
-      <div class="card-image">
-        <img th:src="${card.image}" th:alt="${card.cardName}">
-      </div>
+  <section class="card-container">
+
+    <article class="card-item" th:each="card : ${cards}">
+
+      <header class="card-header">
+        <h3 class="card-name" th:text="${card.name}">Card name</h3>
+      </header>
+
+      <figure class="card-image">
+        <img th:src="${card.image}" th:alt="${card.name}">
+      </figure>
+
       <div class="card-bottom">
-        <div class="card-status owned">Ejet</div>
+        <span class="card-status owned">
+          Ejet
+        </span>
+        <span class="card-status quantity-owned">
+          <span th:text="${card.quantity}"></span> stk i deck.
+        </span>
       </div>
-    </div>
-  </div>
+
+    </article>
+
+  </section>
 </section>
 
 </body>

@@ -7,6 +7,7 @@ import org.example.deckforge.Domain.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,25 @@ public class JdbcEventRepository implements IEventRepository {
     public JdbcEventRepository(JdbcTemplate jdbcTemp){
         this.jdbcTemp = jdbcTemp;
     }
+
+    private final RowMapper<Event> eventRowMapper = (rs, rowNum) -> {
+
+        Event event = new Event();
+
+        event.setId(rs.getInt("event_id"));
+        event.setName(rs.getString("event_name"));
+        User organizer = new User();
+        organizer.setId(rs.getInt("organizer"));
+        event.setOrganizer(organizer);
+        event.setDate(rs.getDate("date").toLocalDate());
+        event.setTime(rs.getTime("time").toLocalTime());
+        event.setRules(rs.getString("ruleText"));
+        event.setMaxParticipants(rs.getInt("maxParticipants"));
+        event.setFormat(Decktype.valueOf(rs.getString("format")));
+        event.setStatus(Status.valueOf(rs.getString("status")));
+
+        return event;
+    };
 
     @Override
     public void createEvent(Event event) {
@@ -60,23 +80,7 @@ public class JdbcEventRepository implements IEventRepository {
                 """;
 
         try {
-            return jdbcTemp.queryForObject(sql, (rs, rowNum) -> {
-                Event e = new Event();
-                e.setId(rs.getInt("id"));
-                e.setName(rs.getString("name"));
-
-                User organizer = new User();
-                organizer.setId(rs.getInt("organizer"));
-                e.setOrganizer(organizer);
-
-                e.setDate(rs.getDate("date").toLocalDate());
-                e.setTime(rs.getTime("time").toLocalTime());
-                e.setRules(rs.getString("ruleText"));
-                e.setMaxParticipants(rs.getInt("maxParticipants"));
-                e.setFormat(Decktype.valueOf(rs.getString("format")));
-                e.setStatus(Status.valueOf(rs.getString("status")));
-                return e;
-            }, event.getId());
+            return jdbcTemp.queryForObject(sql, eventRowMapper, event.getId());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -101,25 +105,7 @@ public class JdbcEventRepository implements IEventRepository {
                 """;
 
         try {
-            return jdbcTemp.query(sql, (rs, rowNum) -> {
-                Event e = new Event();
-                e.setId(rs.getInt("event_id"));
-                e.setName(rs.getString("event_name"));
-
-                User organizer = new User();
-                organizer.setId(rs.getInt("organizer"));
-
-                e.setOrganizer(organizer);
-
-                e.setDate(rs.getDate("date").toLocalDate());
-                e.setTime(rs.getTime("time").toLocalTime());
-                e.setRules(rs.getString("ruleText"));
-                e.setMaxParticipants(rs.getInt("maxParticipants"));
-                e.setFormat(Decktype.valueOf(rs.getString("format")));
-                e.setStatus(Status.valueOf(rs.getString("status")));
-
-                return e;
-            }, status.name());
+            return jdbcTemp.query(sql, eventRowMapper, status.name());
         } catch (EmptyResultDataAccessException e){
             return null;
         }
@@ -198,23 +184,7 @@ public class JdbcEventRepository implements IEventRepository {
                 """;
 
         try {
-            return jdbcTemp.queryForObject(sql, (rs, rowNum) -> {
-Event e = new Event();
-                e.setId(rs.getInt("id"));
-                e.setName(rs.getString("name"));
-
-                User organizer = new User();
-                organizer.setId(rs.getInt("organizer"));
-                e.setOrganizer(organizer);
-
-                e.setDate(rs.getDate("date").toLocalDate());
-                e.setTime(rs.getTime("time").toLocalTime());
-                e.setRules(rs.getString("ruleText"));
-                e.setMaxParticipants(rs.getInt("maxParticipants"));
-                e.setFormat(Decktype.valueOf(rs.getString("format")));
-                e.setStatus(Status.valueOf(rs.getString("status")));
-                return e;
-            }, id);
+            return jdbcTemp.queryForObject(sql, eventRowMapper, id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
