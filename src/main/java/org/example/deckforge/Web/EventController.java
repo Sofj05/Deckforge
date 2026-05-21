@@ -118,6 +118,7 @@ public class EventController {
         User loggedInUser = AuthHelper.getLoggedIn(session);
         try {
             eventService.participateEvent(event, loggedInUser);
+            model.addAttribute("success", "Event tilmeldt!");
         } catch (Exception ex) {
             model.addAttribute("error", ex.getMessage());
         }

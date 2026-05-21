@@ -59,8 +59,14 @@
 
                 <p th:if="${error != null}"
                    th:text="${error}"
-                   style="color:red;">
+                   style="color:orange;">
                 </p>
+
+                <p th:if="${success != null}"
+                   th:text="${success}"
+                   style="color:lightgreen;">
+                </p>
+
 
             </div>
 

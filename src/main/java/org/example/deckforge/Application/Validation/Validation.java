@@ -2,22 +2,15 @@ package org.example.deckforge.Application.Validation;
 
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
-import org.example.deckforge.Domain.Enums.*;
 import org.example.deckforge.Domain.Event;
-import org.example.deckforge.Domain.Repository.ICardRepository;
-import org.example.deckforge.Domain.Repository.IDeckRepository;
-import org.example.deckforge.Domain.Repository.IEventRepository;
-import org.example.deckforge.Domain.Repository.IUserRepository;
+import org.example.deckforge.Domain.Interface.ICardRepository;
+import org.example.deckforge.Domain.Interface.IDeckRepository;
+import org.example.deckforge.Domain.Interface.IEventRepository;
+import org.example.deckforge.Domain.Interface.IUserRepository;
 import org.example.deckforge.Domain.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 @Component
 public class Validation {

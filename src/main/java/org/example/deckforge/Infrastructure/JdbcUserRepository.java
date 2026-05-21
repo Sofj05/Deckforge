@@ -1,17 +1,12 @@
 package org.example.deckforge.Infrastructure;
 
-import org.example.deckforge.Domain.Card;
-import org.example.deckforge.Domain.Enums.Cardtype;
-import org.example.deckforge.Domain.Enums.Rarity;
 import org.example.deckforge.Domain.Enums.Role;
-import org.example.deckforge.Domain.Repository.IUserRepository;
+import org.example.deckforge.Domain.Interface.IUserRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class JdbcUserRepository implements IUserRepository {

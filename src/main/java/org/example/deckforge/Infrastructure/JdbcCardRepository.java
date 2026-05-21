@@ -3,7 +3,7 @@ package org.example.deckforge.Infrastructure;
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Enums.Cardtype;
 import org.example.deckforge.Domain.Enums.Rarity;
-import org.example.deckforge.Domain.Repository.ICardRepository;
+import org.example.deckforge.Domain.Interface.ICardRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

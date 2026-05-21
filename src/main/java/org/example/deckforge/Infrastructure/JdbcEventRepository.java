@@ -2,7 +2,7 @@ package org.example.deckforge.Infrastructure;
 import org.example.deckforge.Domain.Enums.Decktype  ;
 import org.example.deckforge.Domain.Enums.Status;
 import org.example.deckforge.Domain.Event;
-import org.example.deckforge.Domain.Repository.IEventRepository;
+import org.example.deckforge.Domain.Interface.IEventRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;

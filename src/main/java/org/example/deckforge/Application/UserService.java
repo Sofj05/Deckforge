@@ -3,7 +3,7 @@ package org.example.deckforge.Application;
 import org.example.deckforge.Application.Validation.Validation;
 import org.example.deckforge.Application.Validation.ValidationException;
 import org.example.deckforge.Domain.Enums.Role;
-import org.example.deckforge.Domain.Repository.IUserRepository;
+import org.example.deckforge.Domain.Interface.IUserRepository;
 import org.example.deckforge.Domain.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;

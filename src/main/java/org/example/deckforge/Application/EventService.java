@@ -2,11 +2,10 @@ package org.example.deckforge.Application;
 
 import org.example.deckforge.Application.Validation.Validation;
 import org.example.deckforge.Application.Validation.ValidationException;
-import org.example.deckforge.Domain.Deck;
 import org.example.deckforge.Domain.Enums.Role;
 import org.example.deckforge.Domain.Enums.Status;
 import org.example.deckforge.Domain.Event;
-import org.example.deckforge.Domain.Repository.IEventRepository;
+import org.example.deckforge.Domain.Interface.IEventRepository;
 import org.example.deckforge.Domain.User;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +91,7 @@ public class EventService {
         if (now >= event.getMaxParticipants()){
             throw new ValidationException("Der er ikke flere pladser til dette event");
         }
+
         eRepo.addParticipant(event, user);
     }
     

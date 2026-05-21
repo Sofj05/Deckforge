@@ -1,4 +1,4 @@
-package org.example.deckforge.Domain.Repository;
+package org.example.deckforge.Domain.Interface;
 
 import org.example.deckforge.Domain.Deck;
 
