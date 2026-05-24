@@ -25,8 +25,8 @@ public class DeckService {
         dRepo.createDeck(deck);
     }
 
-    public Deck getDecksByUser(User user) {
-        return dRepo.getDeckByUser(user);
+    public List<Deck> getDecksByUser(User user) {
+        return dRepo.getDecksByUser(user);
     }
     public Deck getDeckById(int id) {
         return dRepo.getDeckById(id);

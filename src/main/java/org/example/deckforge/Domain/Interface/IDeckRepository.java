@@ -9,7 +9,7 @@ import java.util.List;
 public interface IDeckRepository {
 
     void createDeck(Deck deck);
-    Deck getDeckByUser(User user);
+    List<Deck> getDecksByUser(User user);
     Deck getDeckById(int id);
     List<Card> getCardsInDeck(int deckId);
     void updateDeck(int id, Deck deck);

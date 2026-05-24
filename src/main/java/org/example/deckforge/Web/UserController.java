@@ -108,6 +108,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
         model.addAttribute("decks", deckService.getDecksByUser(loggedInUser));
+        model.addAttribute("deck", new Deck());
 
         return "user/profile";
     }

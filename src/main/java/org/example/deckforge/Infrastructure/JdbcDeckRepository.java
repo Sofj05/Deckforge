@@ -39,7 +39,7 @@ public class JdbcDeckRepository implements IDeckRepository {
     }
 
     @Override
-    public Deck getDeckByUser(User user) {
+    public List<Deck> getDecksByUser(User user) {
         String sql = """
                 SELECT
                 deck_id,
@@ -50,7 +50,7 @@ public class JdbcDeckRepository implements IDeckRepository {
             WHERE user_id = ?;
                 """;
         try {
-            return jdbcTemp.queryForObject(sql, (rs, rowNm) -> {
+            return jdbcTemp.query(sql, (rs, rowNm) -> {
                 Deck d = new Deck();
                 d.setId(rs.getInt("deck_id"));
                 d.setName(rs.getString("deck_name"));

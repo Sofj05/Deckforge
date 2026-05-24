@@ -70,7 +70,14 @@
 </section>
 <!-- DINE Decks (DECK LAYOUT) -->
 <section class="content container">
-    <h1>Decks</h1>
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Decks</h1>
+
+        <button id="openDeckModal" class="btn">
+            + Nyt Deck
+        </button>
+    </div>
     <div class="card-container">
 
         <!-- LOOP GENNEM DECKS -->
@@ -135,7 +142,7 @@
     </div>
 </section>
 
-<!-- MODAL -->
+<!-- KORT MODAL -->
 <div id="card-modal" class="modal">
     <div class="modal-content">
 
@@ -151,6 +158,30 @@
 
     </div>
 </div>
+
+<!-- DECK OPRETTELSE MODAL -->
+<div id="deckModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <h2>Opret Nyt Deck</h2>
+
+        <form th:action="@{/decks/create}"  th:object="${deck}" method="post">
+                <input type="text" th:field="*{name}">
+            <select th:field="*{format}">
+                <option value="">Vælg format</option>
+
+                <option th:each="type : ${T(org.example.deckforge.Domain.Enums.Decktype).values()}"
+                        th:value="${type}"
+                        th:text="${type.description}">
+                </option>
+            </select>            <button type="submit" class="btn">
+                Opret Deck
+            </button>
+        </form>
+    </div>
+</div>
+
 
 <script>
     // ---------------------------
@@ -244,6 +275,31 @@ let html = "";
             e.currentTarget.style.display = 'none';
         }
     });
+
+// ---------------------------
+// Deck modal
+// ---------------------------
+
+const deckModal = document.getElementById("deckModal");
+const openDeckModalBtn = document.getElementById("openDeckModal");
+const closeDeckModalBtn = document.querySelector("#deckModal .close");
+
+// Åbn modal
+openDeckModalBtn.addEventListener("click", () => {
+deckModal.style.display = "flex";
+});
+
+// Luk modal via X
+closeDeckModalBtn.addEventListener("click", () => {
+deckModal.style.display = "none";
+});
+
+// Luk modal ved klik udenfor
+window.addEventListener("click", (e) => {
+if (e.target === deckModal) {
+deckModal.style.display = "none";
+}
+});
 </script>
 
 </body>
