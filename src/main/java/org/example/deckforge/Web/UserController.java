@@ -8,6 +8,7 @@ import org.example.deckforge.Application.Validation.AuthHelper;
 import org.example.deckforge.Application.Validation.ValidationException;
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
+import org.example.deckforge.Domain.Enums.Decktype;
 import org.example.deckforge.Domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -108,6 +109,8 @@ public UserController(UserService userService, CardService cardService, DeckServ
         model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
         model.addAttribute("decks", deckService.getDecksByUser(loggedInUser));
+        model.addAttribute("decktypes", Decktype.values());
+
         model.addAttribute("deck", new Deck());
 
         return "user/profile";

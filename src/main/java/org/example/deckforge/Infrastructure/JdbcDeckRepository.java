@@ -114,20 +114,18 @@ public class JdbcDeckRepository implements IDeckRepository {
 
 
     @Override
-    public void updateDeck(int id, Deck deck) {
+    public void      updateDeck(int id, Deck deck) {
         String sql = """
-                UPDATE Deck
-                SET
-                name = ?,
-                format = ?,
-                cards = ?
-                WHERE id = ?
-                """;
+            UPDATE Deck
+            SET
+            deck_name = ?,
+            format = ?
+            WHERE deck_id = ?
+            """;
 
         jdbcTemp.update(sql,
                 deck.getName(),
-                deck.getFormat(),
-                deck.getCards(),
+                deck.getFormat() != null ? deck.getFormat().name() : null,
                 id
         );
     }

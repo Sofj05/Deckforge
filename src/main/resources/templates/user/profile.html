@@ -95,6 +95,12 @@
                         <span th:text="${deck.format}">FORMAT</span></p>
                 </section>
             </a>
+            <button class="btn edit-deck-btn"
+                    th:data-id="${deck.id}"
+                    th:data-name="${deck.name}"
+                    th:data-format="${deck.format}">
+                Rediger
+            </button>
         </article>
 
     </div>
@@ -171,13 +177,35 @@
             <select th:field="*{format}">
                 <option value="">Vælg format</option>
 
-                <option th:each="type : ${T(org.example.deckforge.Domain.Enums.Decktype).values()}"
+                <option th:each="type : ${decktypes}"
                         th:value="${type}"
                         th:text="${type.description}">
                 </option>
             </select>            <button type="submit" class="btn">
                 Opret Deck
             </button>
+        </form>
+    </div>
+</div>
+
+<!-- DECK REDIGER MODAL -->
+<div id="editDeckModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditDeckModal">&times;</span>
+
+        <h2>Rediger Deck</h2>
+
+        <form id="editDeckForm" method="post" th:action="@{/decks/update}" th:object="${deck}">
+            <input type="hidden" th:field="*{id}" id="editDeckId">
+            <input type="text" th:field="*{name}" id="editDeckName" placeholder="Deck navn" required>
+            <select th:field="*{format}" id="editDeckFormat" required>
+                <option value="">Vælg format</option>
+                <option th:each="type : ${decktypes}"
+                        th:value="${type}"
+                        th:text="${type.description}">
+                </option>
+            </select>
+            <button type="submit" class="btn">Gem Ændringer</button>
         </form>
     </div>
 </div>
@@ -229,8 +257,8 @@
     function formatrules(text) {
         if (!text) return "";
         const rules = text.split("|")
-let html = "";
-        rules.forEach(a => html += `${a.trim()}</li>`);
+let html = "<ul>";
+        rules.forEach(a => html += `<li>${a.trim()}</li>`);
         html += "</ul>";
         return html;
     }
@@ -275,31 +303,59 @@ let html = "";
             e.currentTarget.style.display = 'none';
         }
     });
+    // ---------------------------
+    // Deck modal - CREATE
+    // ---------------------------
+    const deckModal = document.getElementById("deckModal");
+    const openDeckModalBtn = document.getElementById("openDeckModal");
+    const closeDeckModalBtn = document.querySelector("#deckModal .close");
 
-// ---------------------------
-// Deck modal
-// ---------------------------
+    openDeckModalBtn.addEventListener("click", () => {
+        deckModal.style.display = "flex";
+    });
 
-const deckModal = document.getElementById("deckModal");
-const openDeckModalBtn = document.getElementById("openDeckModal");
-const closeDeckModalBtn = document.querySelector("#deckModal .close");
+    closeDeckModalBtn.addEventListener("click", () => {
+        deckModal.style.display = "none";
+    });
 
-// Åbn modal
-openDeckModalBtn.addEventListener("click", () => {
-deckModal.style.display = "flex";
-});
+    window.addEventListener("click", (e) => {
+        if (e.target === deckModal) {
+            deckModal.style.display = "none";
+        }
+    });
 
-// Luk modal via X
-closeDeckModalBtn.addEventListener("click", () => {
-deckModal.style.display = "none";
-});
+    // ---------------------------
+    // Deck modal - EDIT
+    // ---------------------------
+    const editDeckModal = document.getElementById("editDeckModal");
+    const closeEditDeckModal = document.getElementById("closeEditDeckModal");
+    const editDeckForm = document.getElementById("editDeckForm");
+    const editDeckNameInput = document.getElementById("editDeckName");
+    const editDeckFormatSelect = document.getElementById("editDeckFormat");
+    let currentDeckId = null;
 
-// Luk modal ved klik udenfor
-window.addEventListener("click", (e) => {
-if (e.target === deckModal) {
-deckModal.style.display = "none";
-}
-});
+    // Åbn edit modal når man klikker på Rediger knap
+    document.querySelectorAll('.edit-deck-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById("editDeckId").value = btn.dataset.id;
+            document.getElementById("editDeckName").value = btn.dataset.name;
+            document.getElementById("editDeckFormat").value = btn.dataset.format;
+            editDeckModal.style.display = "flex";
+        });
+    });
+
+    // Luk modal via X
+    closeEditDeckModal.addEventListener("click", () => {
+        editDeckModal.style.display = "none";
+    });
+
+    // Luk modal ved klik udenfor
+    window.addEventListener("click", (e) => {
+        if (e.target === editDeckModal) {
+            editDeckModal.style.display = "none";
+        }
+    });
 </script>
 
 </body>
