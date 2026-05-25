@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tilføj kort til deck</title>
+
+    <link rel="stylesheet" href="/deckforge.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<section class="content container">
+
+    <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="btn">
+        Tilbage til deck
+    </a>
+
+    <h1 th:text="'Tilføj kort til ' + ${deck.name}"></h1>
+
+    <div class="card-container">
+
+        <div class="card-item" th:each="card : ${cards}">
+
+            <div class="card-header">
+                <h3 class="card-name" th:text="${card.name}"></h3>
+            </div>
+
+            <div class="card-image">
+                <img th:src="@{'/uploads/' + ${card.image}}" th:alt="${card.name}">
+            </div>
+
+            <div class="card-bottom">
+
+                <form th:action="@{/user/deck/add-card}" method="post">
+
+                    <input type="hidden" name="deckId" th:value="${deck.id}">
+                    <input type="hidden" name="cardId" th:value="${card.id}">
+
+                    <input type="number"
+                           name="quantity"
+                           value="1"
+                           min="1"
+                           max="99">
+
+                    <button type="submit" class="btn-add">
+                        Tilføj til deck
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>

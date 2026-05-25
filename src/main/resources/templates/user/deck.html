@@ -30,6 +30,10 @@
   <p><strong>Card count:</strong>
     <span th:text="${totalCards}">0</span>
   </p>
+  <a th:href="@{/user/deck/{id}/add-cards(id=${deck.id})}" class="btn">
+    Tilføj kort til deck
+  </a>
+
 
   <section class="card-container">
 

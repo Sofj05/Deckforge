@@ -207,6 +207,15 @@
             </select>
             <button type="submit" class="btn">Gem Ændringer</button>
         </form>
+        <form id="deleteDeckForm"
+              method="post"
+              onsubmit="return confirm('Er du sikker på at du vil slette dette deck?');">
+
+            <button type="submit" class="btn danger">
+                Slet Deck
+            </button>
+        </form>
+
     </div>
 </div>
 
@@ -341,6 +350,9 @@ let html = "<ul>";
             document.getElementById("editDeckId").value = btn.dataset.id;
             document.getElementById("editDeckName").value = btn.dataset.name;
             document.getElementById("editDeckFormat").value = btn.dataset.format;
+            document.getElementById("deleteDeckForm").action =
+                `/decks/delete/${btn.dataset.id}`;
+
             editDeckModal.style.display = "flex";
         });
     });

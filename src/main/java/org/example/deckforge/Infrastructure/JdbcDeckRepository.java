@@ -129,14 +129,19 @@ public class JdbcDeckRepository implements IDeckRepository {
                 id
         );
     }
-
     @Override
     public void deleteDeck(int id) {
-        String sql = """
+        String deleteDeckCards = """
+        DELETE FROM DeckCard
+        WHERE deck_id = ?
+        """;
+
+        String deleteDeck  = """
                 DELETE FROM Deck
-                WHERE id = ?
+                WHERE deck_id = ?
                 """;
-        jdbcTemp.update(sql, id);
+        jdbcTemp.update(deleteDeckCards, id);
+        jdbcTemp.update(deleteDeck , id);
     }
 
 
