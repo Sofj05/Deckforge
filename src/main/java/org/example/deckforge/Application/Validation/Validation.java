@@ -68,7 +68,7 @@ public class Validation {
         if (event.getMaxParticipants() <= 0){
             throw new ValidationException("Event skal have et gyldigt antal pladser til eventet. F.eks. 10");
         }
-        if (event.getRules().isEmpty() || event.getRules() == null){
+        if (event.getRules() == null || event.getRules().isEmpty()){
             throw new ValidationException("Regler for event skal inkluderes");
         }
     }

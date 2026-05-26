@@ -1,4 +1,5 @@
 package org.example.deckforge.Infrastructure;
+import org.example.deckforge.Application.Validation.ValidationException;
 import org.example.deckforge.Domain.Enums.Decktype  ;
 import org.example.deckforge.Domain.Enums.Status;
 import org.example.deckforge.Domain.Event;
@@ -32,9 +33,13 @@ public class JdbcEventRepository implements IEventRepository {
         event.setOrganizer(organizer);
         event.setDate(rs.getDate("date").toLocalDate());
         event.setTime(rs.getTime("time").toLocalTime());
+        event.setLocation(rs.getString("location"));
         event.setRules(rs.getString("ruleText"));
         event.setMaxParticipants(rs.getInt("maxParticipants"));
-        event.setFormat(Decktype.valueOf(rs.getString("format")));
+        String format = rs.getString("format");
+        event.setFormat(
+                format != null ? Decktype.valueOf(format) : null
+        );
         event.setStatus(Status.valueOf(rs.getString("status")));
 
         return event;
@@ -44,31 +49,37 @@ public class JdbcEventRepository implements IEventRepository {
     public void createEvent(Event event) {
         String sql = """
                 INSERT INTO Event
-                (name, organizer, date, time, ruleText, maxParticipants, format, status)
-                Values(?, ?, ?, ?, ?, ?, ?, ?)
+                (event_name, organizer, date, time, location, ruleText, maxParticipants, format, status)
+                Values(?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
-        jdbcTemp.update(sql,
-                event.getName(),
-                event.getOrganizer().getId(),
-                event.getDate(),
-                event.getTime(),
-                event.getRules(),
-                event.getMaxParticipants(),
-                event.getFormat().name(),
-                event.getStatus()
-                );
+        try {
+            jdbcTemp.update(sql,
+                    event.getName(),
+                    event.getOrganizer().getId(),
+                    event.getDate(),
+                    event.getTime(),
+                    event.getLocation(),
+                    event.getRules(),
+                    event.getMaxParticipants(),
+                    event.getFormat() != null ? event.getFormat().name() : null,
+                    event.getStatus().name()
+            );
+        } catch (EmptyResultDataAccessException e){
+            throw new ValidationException("Kunne ikke oprette eventet");
+        }
     }
 
     @Override
     public Event readEvent(Event event) {
         String sql = """
                 SELECT 
-                    id, 
-                    name, 
+                    event_id, 
+                    event_name, 
                     organizer, 
                     date, 
-                    time, 
+                    time,
+                    location,
                     ruleText, 
                     maxParticipants, 
                     format, 
@@ -82,7 +93,7 @@ public class JdbcEventRepository implements IEventRepository {
         try {
             return jdbcTemp.queryForObject(sql, eventRowMapper, event.getId());
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new ValidationException("Kunne ikke indlæse event");
         }
     }
 
@@ -95,9 +106,11 @@ public class JdbcEventRepository implements IEventRepository {
                     organizer,
                     date,
                     time,
+                    location,
                     ruleText,
                     maxParticipants,
-                    format
+                    format,
+                    status
                 FROM
                     Event
                 WHERE
@@ -107,7 +120,7 @@ public class JdbcEventRepository implements IEventRepository {
         try {
             return jdbcTemp.query(sql, eventRowMapper, status.name());
         } catch (EmptyResultDataAccessException e){
-            return null;
+            throw new ValidationException("Kunne ikke indlæse events");
         }
 
     }
@@ -117,25 +130,28 @@ public class JdbcEventRepository implements IEventRepository {
         String sql = """
                 UPDATE event
                 SET
-                name = ?,
+                event_name = ?,
                 organizer = ?,
                 date = ?,
-                tine = ?,
-                rules = ?,
+                time = ?,
+                location = ?,
+                ruleText = ?,
                 maxParticipants = ?,
                 format = ?,
                 status = ?
                 WHERE
-                id = ?
+                event_id = ?
                 """;
 
         jdbcTemp.update(sql,
                 event.getName(),
-                event.getOrganizer(),
+                event.getOrganizer().getId(),
                 event.getDate(),
                 event.getTime(),
+                event.getLocation(),
+                event.getRules(),
                 event.getMaxParticipants(),
-                event.getFormat().name(),
+                event.getFormat() != null ? event.getFormat().name() : null,
                 event.getStatus().name(),
                 id
                 );
@@ -145,7 +161,7 @@ public class JdbcEventRepository implements IEventRepository {
     public void deleteEvent(int id) {
         String sql = """
                 DELETE FROM Event
-                WHERE id = ?
+                WHERE event_id = ?
                 """;
         jdbcTemp.update(sql, id);
     }
@@ -168,11 +184,12 @@ public class JdbcEventRepository implements IEventRepository {
     public Event getEventById(int id){
         String sql = """
                 SELECT 
-                    id, 
-                    name, 
+                    event_id, 
+                    event_name, 
                     organizer, 
                     date, 
                     time, 
+                    location,
                     ruleText, 
                     maxParticipants, 
                     format, 
@@ -180,13 +197,13 @@ public class JdbcEventRepository implements IEventRepository {
                 FROM 
                     event
                 WHERE 
-                    id = ?
+                    event_id = ?
                 """;
 
         try {
             return jdbcTemp.queryForObject(sql, eventRowMapper, id);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new ValidationException("Kunne indlæse event");
         }
     }
     
@@ -206,6 +223,48 @@ public class JdbcEventRepository implements IEventRepository {
         }
     }
 
+    public List<Integer> getUsersParticipation(User user){
+        String sql = """
+                SELECT
+                    event_id
+                FROM
+                    Participants
+                WHERE
+                    user_id = ?
+        """;
+        try {
+            return jdbcTemp.queryForList(sql, Integer.class, user.getId() );
+        } catch (EmptyResultDataAccessException e){
+            throw new ValidationException("Kunne indlæse dine tilmeldte events");
+        }
+    }
+
+    public List<Event> getOrganizersEvents(User user){
+        String sql = """
+                SELECT 
+                    event_id, 
+                    event_name, 
+                    organizer, 
+                    date, 
+                    time, 
+                    location,
+                    ruleText, 
+                    maxParticipants, 
+                    format, 
+                    status
+                FROM 
+                    `Event`
+                WHERE 
+                    organizer = ?
+        """;
+
+        try {
+            return jdbcTemp.query(sql, eventRowMapper, user.getId());
+        } catch (EmptyResultDataAccessException e){
+            throw new ValidationException("Kunne ikke indlæse dine oprettede events");
+        }
+    }
+
 
     public void addParticipant(Event event, User user){
         String sql = """
@@ -220,6 +279,7 @@ public class JdbcEventRepository implements IEventRepository {
                 user.getId()
                 );
         } catch (EmptyResultDataAccessException e){
+            throw new ValidationException("Kunne ikke tilmelde eventet");
 
      }
     }

@@ -26,7 +26,9 @@ public class EventService {
 
     public Event getEventById(int id) {
         validation.validateInt(id);
-        return eRepo.getEventById(id);
+        Event event = eRepo.getEventById(id);
+        setOrganizer(event);
+        return event;
     }
 
     public void createEventAsUser(Event event) {
@@ -44,7 +46,7 @@ public class EventService {
     public List<Event> getOngoingEvents(){
         Status status = Status.ONGOING;
         List<Event> events = eRepo.getEventsByStatus(status);
-        setOrganizer(events);
+        setOrganizers(events);
         return events;
     }
 
@@ -52,7 +54,7 @@ public class EventService {
         Status status = Status.PROCESSING;
 
         List<Event> events = eRepo.getEventsByStatus(status);
-        setOrganizer(events);
+        setOrganizers(events);
         return events;
     }
 
@@ -113,9 +115,38 @@ public class EventService {
         return participants;
     }
 
+    public List<Event> getUsersParticipation(User user){
+        List<Integer> eventList = eRepo.getUsersParticipation(user);
+        List<Event> events = new ArrayList<>();
+        for (Integer id : eventList){
+            events.add(eRepo.getEventById(id));
+        }
+        setOrganizers(events);
+        return events;
+    }
+
+    public List<Event> getOrganizersEvents(User user){
+        List<Event> events = eRepo.getOrganizersEvents(user);
+        setOrganizers(events);
+        return events;
+    }
+
+
     //Lille privat metode til at sette arrangøren da den kun henter id fra db i EventRepository
-    private void setOrganizer(List<Event> events){
+    private void setOrganizers(List<Event> events){
         for (Event event : events){
+            if (event.getOrganizer() != null) {
+                User organizer = userService.getUserById(event.getOrganizer().getId());
+                if (organizer != null) {
+                    event.setOrganizer(organizer);
+                }
+            }
+        }
+    }
+
+    //samme som ovenover, men kun for et enkelt event
+    private void setOrganizer(Event event){
+        if (event.getOrganizer() != null) {
             User organizer = userService.getUserById(event.getOrganizer().getId());
             if (organizer != null) {
                 event.setOrganizer(organizer);

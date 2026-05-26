@@ -3,6 +3,7 @@ package org.example.deckforge.Web;
 import jakarta.servlet.http.HttpSession;
 import org.example.deckforge.Application.CardService;
 import org.example.deckforge.Application.DeckService;
+import org.example.deckforge.Application.EventService;
 import org.example.deckforge.Application.UserService;
 import org.example.deckforge.Application.Validation.AuthHelper;
 import org.example.deckforge.Application.Validation.ValidationException;
@@ -24,12 +25,14 @@ public class UserController{
     private final UserService userService;
     private final CardService cardService;
     private final DeckService deckService;
+    private final EventService eventService;
 
 
-public UserController(UserService userService, CardService cardService, DeckService deckService){
+public UserController(UserService userService, CardService cardService, DeckService deckService, EventService eventService){
     this.userService = userService;
     this.cardService = cardService;
     this.deckService = deckService;
+    this.eventService = eventService;
 }
 
     @GetMapping("/")
@@ -110,6 +113,8 @@ public UserController(UserService userService, CardService cardService, DeckServ
         model.addAttribute("cards", cardService.getCardsByUser(loggedInUser));
         model.addAttribute("decks", deckService.getDecksByUser(loggedInUser));
         model.addAttribute("decktypes", Decktype.values());
+        model.addAttribute("joinedEvents", eventService.getUsersParticipation(loggedInUser));
+        model.addAttribute("organizersEvents", eventService.getOrganizersEvents(loggedInUser));
 
         model.addAttribute("deck", new Deck());
 

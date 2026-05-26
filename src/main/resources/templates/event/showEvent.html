@@ -17,8 +17,8 @@
 
         <nav class="nav">
             <ul class="nav-list">
-                <li><a href="#">Din Profil</a></li>
-                <li><a href="#">Events</a></li>
+                <li><a th:href="@{/user/profile}">Din Profil</a></li>
+                <li><a th:href="@{/event/ongoingEvents}">Events</a></li>
                 <li><a href="#">Alle Kort</a></li>
             </ul>
         </nav>
@@ -30,7 +30,7 @@
 </section>
 
 <section class="content container">
-    <h2 th:text="${event.name}"></h2>
+    <h2 th:text="${event.name}" style="display:inline-block; margin-right:10px;"></h2>
     <form   id="participateForm"
             th:action="@{/event/participate/{id}(id=${event.id})}"
             method="post"
@@ -46,6 +46,9 @@
     </form>
 
     <div class="event-info">
+        <p id="organizerProfile" style="display:none;"> <!-- Ligesom knappen ovenover, vil denne status-linje kun vises for arrangøren -->
+            <strong>Status:</strong> <span th:text="${event.status.description}"></span>
+        </p>
         <p><strong>Dato:</strong> <span th:text="${event.date}"></span></p>
         <p><strong>Tidspunkt:</strong> <span th:text="${event.time}"></span></p>
         <p><strong>Lokation:</strong> <span th:text="${event.location}"></span></p>
@@ -76,6 +79,15 @@
 
     if (params.get("from") === "ongoing") { // Læser URL parametren, det der blev sendt ind fra den html man var på før man trykkede ind på denne
         document.getElementById("participateForm").style.display = "inline-block"; // Tager knappens id og ændrer dens udseende så man igen kan se knappen
+    }
+</script>
+
+<!-- Bruges til at vise 'status' linjen for arrangøren hvis det er dem der åbner den fra deres egen profil -->
+<script>
+    const params = new URLSearchParams(window.location.search); // Denne linje hjælper med at tjekke hvad der står efter URL'en
+
+    if (params.get("from") === "profile") { // Læser URL parametren, det der blev sendt ind fra den html man var på før man trykkede ind på denne
+        document.getElementById("organizerProfile").style.display = "inline-block"; // Tager knappens id og ændrer dens udseende så man igen kan se knappen
     }
 </script>
 

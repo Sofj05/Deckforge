@@ -94,9 +94,7 @@ public class UserService {
     }
 
     public User getUserById(int id) {
-        User user = new User();
-
-        return user;
+        return uRepo.getUserById(id);
     }
 
 }

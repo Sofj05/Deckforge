@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/event")
@@ -28,16 +29,25 @@ public class EventController {
     @GetMapping("/createEventUser") // Viser createEvent siden
     public String createEvent(Model model) {
         model.addAttribute("event", new Event()); // Tom bruger-objekt til visning i HTML-form
-        model.addAttribute("decktype", Decktype.values()); //Bruges til at sætte værdierne for enums som brugeren kan vælge
+        model.addAttribute("format", Decktype.values()); //Bruges til at sætte værdierne for enums som brugeren kan vælge
         return "event/createEventUser"; // Returnere html filen "createEventUser.html"
     }
 
     // Post: Opretter Event
     @PostMapping("/createEventUser") // Modtager createEvent-formularen
-    public String createNewEvent(@ModelAttribute("event") Event event, Model model) {
-
-        eventService.createEventAsUser(event); // Kalder service -> opretter eventet
-        return "redirect:/event/list";
+    public String createNewEvent(@ModelAttribute("event") Event event, HttpSession httpSession, RedirectAttributes redirectAttributes) {
+        if (!AuthHelper.isLoggedIn(httpSession)) {
+            return "redirect:/user/login";
+        }
+        try {
+            User loggedInUser = AuthHelper.getLoggedIn(httpSession);
+            event.setOrganizer(loggedInUser);
+            eventService.createEventAsUser(event); // Kalder service -> opretter eventet
+            return "redirect:/event/ongoingEvents";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/event/createEventUser";
+        }
     }
 
     //GET: Viser en liste over de events der ventes på at blive behandles. KUN FOR ADMIN!
@@ -52,13 +62,14 @@ public class EventController {
     public String approveEvent(@PathVariable int id,
                                @RequestParam String decision,
                                HttpSession session,
-                               Model model){
+                               RedirectAttributes redirectAttributes){
         Event event = eventService.getEventById(id);
         User loggedInUser = AuthHelper.getLoggedIn(session);
         try {
             eventService.approveEvent(loggedInUser, event, decision);
         } catch (Exception ex){
-            model.addAttribute("error", ex.getMessage());
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            redirectAttributes.addFlashAttribute("errorEventId", id);
         }
 
         return "redirect:/event/processingEvents";
@@ -67,11 +78,11 @@ public class EventController {
 
     // Get: Viser Event info
     @GetMapping("/showEvent/{id}")
-    public String showEvent(@PathVariable Model model, int id) {
+    public String showEvent(@PathVariable int id, Model model ) {
         Event event = eventService.getEventById(id);
         model.addAttribute("event", event);
         model.addAttribute("participants", eventService.getParticipationList(event));
-        return "/event/showEvent";
+        return "event/showEvent";
     }
 
 
@@ -118,14 +129,16 @@ public class EventController {
 
     //POST: Handling der udføres for at fortælle om man kan tilmelde sig eventet
     @PostMapping("/participate/{id}")
-    public String participateEvent(@PathVariable int id, HttpSession session, Model model){
+    public String participateEvent(@PathVariable int id, HttpSession session, RedirectAttributes redirectAttributes){
         Event event = eventService.getEventById(id);
         User loggedInUser = AuthHelper.getLoggedIn(session);
         try {
             eventService.participateEvent(event, loggedInUser);
-            model.addAttribute("success", "Event tilmeldt!");
+            redirectAttributes.addFlashAttribute("success", "Event tilmeldt!");
+            redirectAttributes.addFlashAttribute("successEventId", id); //Id tilføjes da meddelelsen ellers ville skrives ved ALLE events
         } catch (Exception ex) {
-            model.addAttribute("error", ex.getMessage());
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            redirectAttributes.addFlashAttribute("errorEventId", id);
         }
         return "redirect:/event/ongoingEvents";
     }

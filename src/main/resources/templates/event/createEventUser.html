@@ -17,15 +17,14 @@
 
         <nav class="nav">
             <ul class="nav-list">
-                <li><a href="#">Din Profil</a></li>
-                <li><a href="#">Events</a></li>
+                <li><a th:href="@{/user/profile}">Din Profil</a></li>
+                <li><a th:href="@{/event/ongoingEvents}">Events</a></li>
                 <li><a href="#">Alle Kort</a></li>
             </ul>
         </nav>
     </div>
 </header>
 
-<div th:replace="fragments/Header :: header"></div>
 
 <section class="hero">
     <h1>Opret Event</h1>
@@ -34,10 +33,7 @@
 
 <section class="content container">
 
-    <form action="/event/ongoingEvent"
-          method="post"
-          th:object="${event}"
-          class="form">
+    <form th:action="@{/event/createEventUser}" method="post" th:object="${event}">
 
         <div class="form-group">
             <label for="name">Eventnavn</label>
@@ -69,8 +65,8 @@
         <div class="form-group">
             <label for="format">Format</label>
             <select id="format" th:field="*{format}">
-                <option value="">- Vælg format -</option>
-                <option th:each="f : ${decktype}"
+                <option th:value="${null}">- Vælg format -</option>
+                <option th:each="f : ${format}"
                         th:value="${f}"
                         th:text="${f.description}">
                 </option>
@@ -84,15 +80,16 @@
                       rows="5"></textarea>
         </div>
 
-        <input type="hidden"
-               name="organizer"
-               th:value="${session.loggedInUser.id}">
-
         <button type="submit" class="btn">
             Opret Event
         </button>
 
     </form>
+
+    <p th:if="${error != null}"
+       th:text="${error}"
+       style="color:orange;">
+    </p>
 
 </section>
 

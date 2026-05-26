@@ -18,4 +18,6 @@ public interface IEventRepository {
     Event getEventById(int id);
     List<Integer> getParticipantsForEvent(Event event);
     void addParticipant(Event event, User user);
+    List<Integer> getUsersParticipation(User user);
+    List<Event> getOrganizersEvents(User user);
 }

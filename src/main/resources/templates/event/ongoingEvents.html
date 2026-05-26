@@ -16,8 +16,8 @@
 
         <nav class="nav">
             <ul class="nav-list">
-                <li><a href="#">Din Profil</a></li>
-                <li><a href="#">Events</a></li>
+                <li><a th:href="@{/user/profile}">Din Profil</a></li>
+                <li><a th:href="@{/event/ongoingEvents}">Events</a></li>
                 <li><a href="#">Alle Kort</a></li>
             </ul>
         </nav>
@@ -31,6 +31,10 @@
 
 <section class="content container">
     <h1>Liste over events på Deckforge</h1>
+    <a th:href="@{/event/createEventUser}"
+       class="btn small">
+        Opret event
+    </a>
 
     <div class="event-card-container">
         <div class="event-card" th:each="event : ${events}">
@@ -59,7 +63,7 @@
                 </a>
 
 
-                <!-- Tilmed -->
+                <!-- Tilmeld event -->
                 <form th:action="@{/event/participate/{id}(id=${event.id})}"
                       method="post">
                     <input type="hidden"
@@ -72,14 +76,14 @@
                     </button>
                 </form>
 
-                <p th:if="${error != null}"
-                   th:text="${error}"
-                   style="color:orange;">
-                </p>
-
-                <p th:if="${success != null}"
+                <p th:if="${success != null and successEventId == event.id}"
                    th:text="${success}"
                    style="color:lightgreen;">
+                </p>
+
+                <p th:if="${error != null and errorEventId == event.id}"
+                   th:text="${error}"
+                   style="color:orange;">
                 </p>
 
 

@@ -20,8 +20,8 @@
 
         <nav class="nav">
             <ul class="nav-list">
-                <li><a href="#">Din Profil</a></li>
-                <li><a href="#">Events</a></li>
+                <li><a th:href="@{/user/profile}">Din Profil</a></li>
+                <li><a th:href="@{/event/ongoingEvents}">Events</a></li>
                 <li><a href="#">Alle Kort</a></li>
             </ul>
         </nav>
@@ -68,6 +68,78 @@
     </div>
 
 </section>
+<!-- oprettede events -->
+<section class="content container"  th:if="${organizersEvents != null and !#lists.isEmpty(organizersEvents)}">
+    <h1>Dine oprettede events</h1>
+
+    <div class="event-card-container">
+        <div class="event-card" th:each="event : ${organizersEvents}">
+            <h3 th:text="${event.name}"></h3>
+
+            <p>
+                <strong>Status:</strong>
+                <span th:text="${event.status.description}"></span>
+            </p>
+
+            <p>
+                <strong>Dato:</strong>
+                <span th:text="${event.date}"></span>
+            </p>
+
+            <p>
+                <strong>Tid:</strong>
+                <span th:text="${event.time}"></span>
+            </p>
+
+            <div class="event-card-actions">
+
+                <a th:href="@{/event/showEvent/{id}(id=${event.id}, from='profile')}"
+                   class="btn small">
+                    Se info
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Tilmeldte events -->
+<section class="content container"  th:if="${joinedEvents != null and !#lists.isEmpty(joinedEvents)}">
+    <h1>Dine tilmeldte events</h1>
+
+    <div class="event-card-container">
+        <div class="event-card" th:each="event : ${joinedEvents}">
+            <h3 th:text="${event.name}"></h3>
+
+            <p>
+                <strong>Arrangør:</strong>
+                <span th:text="${event.organizer.username}"></span>
+            </p>
+
+            <p>
+                <strong>Dato:</strong>
+                <span th:text="${event.date}"></span>
+            </p>
+
+            <p>
+                <strong>Tid:</strong>
+                <span th:text="${event.time}"></span>
+            </p>
+
+            <div class="event-card-actions">
+
+                <a th:href="@{/event/showEvent/{id}(id=${event.id})}"
+                   class="btn small">
+                    Se info
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
 <!-- DINE Decks (DECK LAYOUT) -->
 <section class="content container">
 
