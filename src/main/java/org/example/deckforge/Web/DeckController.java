@@ -130,9 +130,10 @@ public class DeckController {
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteDeck(@ModelAttribute Deck deck, HttpSession session) {
+    public String deleteDeck(@PathVariable int id, HttpSession session) {
+
         User user = (User) session.getAttribute("loggedInUser");
-        deckService.deleteDeck(deck.getId());
+        deckService.deleteDeck(id);
 
         return "redirect:/user/profile";
     }

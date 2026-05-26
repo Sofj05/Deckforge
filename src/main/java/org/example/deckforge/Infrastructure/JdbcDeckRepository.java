@@ -130,7 +130,11 @@ public class JdbcDeckRepository implements IDeckRepository {
     SET quantity = quantity - ?
     WHERE deck_id = ? AND card_id = ?
     """;
-        jdbcTemp.update(sql, quantity, deckId, cardId);
+        int updated = jdbcTemp.update(sql, quantity, deckId, cardId);
+
+        if(updated == 0){
+            throw new RuntimeException("Kortet findes ikke i decket");
+        }
         String deleteIfZero = """
     DELETE FROM DeckCard
     WHERE deck_id = ? AND card_id = ? AND quantity <= 0
