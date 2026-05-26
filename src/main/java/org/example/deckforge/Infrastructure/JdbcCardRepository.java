@@ -26,6 +26,7 @@ public class JdbcCardRepository implements ICardRepository {
 
         Card card = new Card();
 
+        card.setId(rs.getInt("card_id"));
         card.setName((rs.getString("card_name")));
         card.setCardtype((Cardtype.valueOf(rs.getString("cardType"))));
         card.setMana(rs.getString("mana"));

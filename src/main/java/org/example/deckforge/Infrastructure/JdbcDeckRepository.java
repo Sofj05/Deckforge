@@ -124,6 +124,22 @@ public class JdbcDeckRepository implements IDeckRepository {
     }
 
     @Override
+    public void removeCardFromDeck(int deckId, int cardId, int quantity) {
+        String sql = """
+    UPDATE DeckCard
+    SET quantity = quantity - ?
+    WHERE deck_id = ? AND card_id = ?
+    """;
+        jdbcTemp.update(sql, quantity, deckId, cardId);
+        String deleteIfZero = """
+    DELETE FROM DeckCard
+    WHERE deck_id = ? AND card_id = ? AND quantity <= 0
+    """;
+
+        jdbcTemp.update(deleteIfZero, deckId, cardId);
+    }
+
+    @Override
     public void      updateDeck(int id, Deck deck) {
         String sql = """
             UPDATE Deck

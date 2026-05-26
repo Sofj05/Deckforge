@@ -77,6 +77,49 @@ public class DeckController {
         deckService.addCardToDeck(deckId, card.getId(), card.getQuantity());
         return "redirect:/decks/" + deckId + "/addCards";
     }
+    @GetMapping("/{deckId}")
+    public String viewDeck(
+            @PathVariable int deckId,
+            HttpSession session,
+            Model model) {
+        if (!AuthHelper.isLoggedIn(session)) {
+            return "redirect:/user/login";
+        }
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+        Deck deck = deckService.getDeckById(deckId);
+        if (deck == null || !deck.getUserId().equals(loggedInUser.getId())) {
+            return "redirect:/user/profile";
+        }
+        List<Card> cards = deckService.getCardsInDeck(deckId);
+        int totalCards = cards.stream().mapToInt(Card::getQuantity).sum();
+
+        model.addAttribute("deck", deck);
+        model.addAttribute("cards", cards);
+        model.addAttribute("totalCards", totalCards);
+
+        return "user/deck";
+    }
+
+    @PostMapping("/{deckId}/removeCard")
+    public String removeCardFromDeck(
+            @PathVariable int deckId,
+            @ModelAttribute Card card,
+            HttpSession session) {
+
+        if (!AuthHelper.isLoggedIn(session)) {
+            return "redirect:/user/login";
+        }
+
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+
+        Deck deck = deckService.getDeckById(deckId);
+        if (deck == null || !deck.getUserId().equals(loggedInUser.getId())) {
+            return "redirect:/user/profile";
+        }
+
+        deckService.removeCardFromDeck(deckId, card.getId(), card.getQuantity());
+        return "redirect:/decks/" + deckId;
+    }
 
     @PostMapping("/update")
     public String updateDeck(@ModelAttribute Deck deck, HttpSession session) {

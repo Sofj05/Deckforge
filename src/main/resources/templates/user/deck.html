@@ -56,10 +56,42 @@
         </span>
       </div>
 
+      <form th:action="@{/decks/{deckId}/removeCard(deckId=${deck.id})}" method="post">
+        <div class="quantity-controls">
+          <button type="button" class="qty-btn-minus">–</button>
+          <input type="number" name="quantity" value="1" min="1" class="qty-input" readonly>
+          <button type="button" class="qty-btn-plus">+</button>
+        </div>
+        <input type="hidden" name="cardId" th:value="${card.id}">
+        <button type="submit" class="btn-remove-card">Fjern fra deck</button>
+      </form>
+
     </article>
 
   </section>
 </section>
+
+<script>
+  document.querySelectorAll('.card-item').forEach(cardItem => {
+    const minusBtn = cardItem.querySelector('.qty-btn-minus');
+    const plusBtn = cardItem.querySelector('.qty-btn-plus');
+    const input = cardItem.querySelector('.qty-input');
+
+    minusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      let value = parseInt(input.value);
+      if (value > 1) {
+        input.value = value - 1;
+      }
+    });
+
+    plusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      let value = parseInt(input.value);
+      input.value = value + 1;
+    });
+  });
+</script>
 
 </body>
 </html>
