@@ -112,6 +112,16 @@ public class JdbcDeckRepository implements IDeckRepository {
         }, deckId);
     }
 
+    @Override
+    public void addCardToDeck(int deckId, int cardId, int quantity) {
+        String sql = """
+        INSERT INTO DeckCard (deck_id, card_id, quantity)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE quantity = quantity + ?
+        """;
+
+        jdbcTemp.update(sql, deckId, cardId, quantity, quantity);
+    }
 
     @Override
     public void      updateDeck(int id, Deck deck) {

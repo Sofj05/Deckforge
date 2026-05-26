@@ -12,6 +12,7 @@ public interface IDeckRepository {
     List<Deck> getDecksByUser(User user);
     Deck getDeckById(int id);
     List<Card> getCardsInDeck(int deckId);
+    void addCardToDeck(int deckId, int cardId, int quantity);
     void updateDeck(int id, Deck deck);
     void deleteDeck(int id);
 }

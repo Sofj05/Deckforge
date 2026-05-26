@@ -2,59 +2,128 @@
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tilføj kort til deck</title>
-
+    <title>Tilføj kort til deck - Deckforge</title>
     <link rel="stylesheet" href="/deckforge.css">
     <link rel="stylesheet" href="/style.css">
+    <style>
+        .quantity-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .quantity-controls button {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .quantity-controls input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .btn-add-card {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-add-card:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
+<header class="header">
+    <div class="container nav-container">
+        <a href="#" class="logo">
+            <img src="/Logo_Deckforge2.png" class="logo-icon" alt="Deckforge logo">
+        </a>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="/user/profile">Din Profil</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Alle Kort</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
 <section class="content container">
+    <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="btn">← Tilbage til deck</a>
+    <h1 style="margin-top: 20px;" th:text="'Tilføj kort til: ' + ${deck.name}">Tilføj kort til deck</h1>
+    <p style="color: #666;">Vælg antal kort du ønsker at tilføje til dit deck</p>
 
-    <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="btn">
-        Tilbage til deck
-    </a>
+    <section class="card-container">
+        <!-- LOOP GENNEM BRUGERENS KORT -->
+        <article class="card-item" th:each="card : ${userCards}">
+            <header class="card-header">
+                <h3 class="card-name" th:text="${card.name}">Kort navn</h3>
+            </header>
 
-    <h1 th:text="'Tilføj kort til ' + ${deck.name}"></h1>
-
-    <div class="card-container">
-
-        <div class="card-item" th:each="card : ${cards}">
-
-            <div class="card-header">
-                <h3 class="card-name" th:text="${card.name}"></h3>
-            </div>
-
-            <div class="card-image">
-                <img th:src="@{'/uploads/' + ${card.image}}" th:alt="${card.name}">
-            </div>
+            <figure class="card-image">
+                <img th:src="${card.image}" th:alt="${card.name}">
+            </figure>
 
             <div class="card-bottom">
-
-                <form th:action="@{/user/deck/add-card}" method="post">
-
-                    <input type="hidden" name="deckId" th:value="${deck.id}">
-                    <input type="hidden" name="cardId" th:value="${card.id}">
-
-                    <input type="number"
-                           name="quantity"
-                           value="1"
-                           min="1"
-                           max="99">
-
-                    <button type="submit" class="btn-add">
-                        Tilføj til deck
-                    </button>
-
-                </form>
-
+                <span class="card-status owned">
+                    Ejet
+                </span>
+                <span class="card-status quantity-owned">
+                    <span th:text="${card.quantity}"></span> stk i samling.
+                </span>
             </div>
 
-        </div>
-
-    </div>
-
+            <!-- FORM TIL AT TILFØJE KORT -->
+            <form th:action="@{/decks/{deckId}/addCards(deckId=${deck.id})}" method="post">
+                <div class="quantity-controls">
+                    <button type="button" class="qty-btn-minus">–</button>
+                    <input type="number" name="quantity" value="1" min="1" class="qty-input" readonly>
+                    <button type="button" class="qty-btn-plus">+</button>
+                </div>
+                <input type="hidden" name="id" th:value="${card.id}">
+                <button type="submit" class="btn-add-card">Tilføj til deck</button>
+            </form>
+        </article>
+    </section>
 </section>
+
+<script>
+    // Håndter quantity controls
+    document.querySelectorAll('.card-item').forEach(cardItem => {
+        const minusBtn = cardItem.querySelector('.qty-btn-minus');
+        const plusBtn = cardItem.querySelector('.qty-btn-plus');
+        const input = cardItem.querySelector('.qty-input');
+
+        minusBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            let value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        });
+
+        plusBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            let value = parseInt(input.value);
+            input.value = value + 1;
+        });
+    });
+</script>
 
 </body>
 </html>
