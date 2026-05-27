@@ -791,3 +791,96 @@ h1 {
     background-color: #45a049;
 }
 
+/* =========================
+   DECKS
+========================= */
+
+/* Grid layout */
+.deck-container {
+    display: grid;
+
+    grid-template-columns:
+            repeat(auto-fill, minmax(300px, 1fr));
+
+    gap: 20px;
+}
+
+/* Deck kort */
+.deck-item {
+    background: #2c313a;
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    border-left: 4px solid #6366f1;
+
+    transition: 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 180px;
+}
+
+/* Hover */
+.deck-item:hover {
+    background: #323843;
+
+    transform: translateY(-3px);
+}
+
+/* Link */
+.deck-link {
+    text-decoration: none;
+    color: inherit;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    flex: 1;
+}
+
+/* Titel */
+.deck-header h3 {
+    margin-top: 0;
+
+    color: #c7d2fe;
+
+    font-size: 1.3rem;
+}
+.deck-header { /* for at fjerne sort baggrund fra teksten */
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Meta info */
+.deck-meta p {
+    margin: 0;
+
+    padding: 12px;
+
+    background: #1b1e24;
+
+    border-radius: 8px;
+
+    border: 1px solid #3b4250;
+
+    color: #e5e7eb;
+}
+
+
+.deck-meta strong {
+    color: #a5b4fc;
+}
+
+/* Rediger knap */
+.edit-deck-btn {
+    margin-top: 16px;
+    width: 100%;
+}
+

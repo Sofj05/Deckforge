@@ -136,7 +136,7 @@
             + Nyt Deck
         </button>
     </div>
-    <div class="card-container">
+    <div class="deck-container">
 
         <!-- LOOP GENNEM DECKS -->
         <article class="deck-item"
@@ -230,16 +230,27 @@
 
         <h2>Opret Nyt Deck</h2>
 
-        <form th:action="@{/decks/create}"  th:object="${deck}" method="post">
-                <input type="text" th:field="*{name}">
-            <select th:field="*{format}">
-                <option value="">Vælg format</option>
+        <form th:action="@{/decks/create}" th:object="${deck}" method="post" class="form">
 
-                <option th:each="type : ${decktypes}"
-                        th:value="${type}"
-                        th:text="${type.description}">
-                </option>
-            </select>            <button type="submit" class="btn">
+            <div class="form-group">
+                <label>Deck navn</label>
+                <input type="text" th:field="*{name}">
+            </div>
+
+            <div class="form-group">
+                <label>Format</label>
+
+                <select th:field="*{format}">
+                    <option value="">Vælg format</option>
+
+                    <option th:each="type : ${decktypes}"
+                            th:value="${type}"
+                            th:text="${type.description}">
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">
                 Opret Deck
             </button>
         </form>
@@ -253,16 +264,34 @@
 
         <h2>Rediger Deck</h2>
 
-        <form id="editDeckForm" method="post" th:action="@{/decks/update}" th:object="${deck}">
+        <form id="editDeckForm" method="post" th:action="@{/decks/update}" th:object="${deck}" class="form">
             <input type="hidden" th:field="*{id}" id="editDeckId">
-            <input type="text" th:field="*{name}" id="editDeckName" placeholder="Deck navn" required>
-            <select th:field="*{format}" id="editDeckFormat" required>
-                <option value="">Vælg format</option>
-                <option th:each="type : ${decktypes}"
-                        th:value="${type}"
-                        th:text="${type.description}">
-                </option>
-            </select>
+            <div class="form-group">
+                <label>Deck navn</label>
+
+                <input type="text"
+                       th:field="*{name}"
+                       id="editDeckName"
+                       placeholder="Deck navn"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label>Format</label>
+
+                <select th:field="*{format}"
+                        id="editDeckFormat"
+                        required>
+
+                    <option value="">Vælg format</option>
+
+                    <option th:each="type : ${decktypes}"
+                            th:value="${type}"
+                            th:text="${type.description}">
+                    </option>
+
+                </select>
+            </div>
             <button type="submit" class="btn">Gem Ændringer</button>
         </form>
         <form id="deleteDeckForm"
