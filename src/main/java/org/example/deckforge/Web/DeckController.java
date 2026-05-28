@@ -3,7 +3,6 @@ package org.example.deckforge.Web;
 import jakarta.servlet.http.HttpSession;
 import org.example.deckforge.Application.CardService;
 import org.example.deckforge.Application.DeckService;
-import org.example.deckforge.Application.UserService;
 import org.example.deckforge.Application.Validation.AuthHelper;
 import org.example.deckforge.Domain.Card;
 import org.example.deckforge.Domain.Deck;
@@ -54,7 +53,7 @@ public class DeckController {
         model.addAttribute("deck", deck);
         model.addAttribute("userCards", userCards);
 
-        return "user/addCardsToDeck";
+        return "deck/addCardsToDeck";
     }
 
     @PostMapping("/{deckId}/addCards")
@@ -77,11 +76,10 @@ public class DeckController {
         deckService.addCardToDeck(deckId, card.getId(), card.getQuantity());
         return "redirect:/decks/" + deckId + "/addCards";
     }
+
+
     @GetMapping("/{deckId}")
-    public String viewDeck(
-            @PathVariable int deckId,
-            HttpSession session,
-            Model model) {
+    public String viewDeck(@PathVariable int deckId, HttpSession session, Model model) {
         if (!AuthHelper.isLoggedIn(session)) {
             return "redirect:/user/login";
         }
@@ -97,7 +95,7 @@ public class DeckController {
         model.addAttribute("cards", cards);
         model.addAttribute("totalCards", totalCards);
 
-        return "user/deck";
+        return "deck/deck";
     }
 
     @PostMapping("/{deckId}/removeCard")
@@ -130,9 +128,7 @@ public class DeckController {
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteDeck(@PathVariable int id, HttpSession session) {
-
-        User user = (User) session.getAttribute("loggedInUser");
+    public String deleteDeck(@PathVariable int id) {
         deckService.deleteDeck(id);
 
         return "redirect:/user/profile";

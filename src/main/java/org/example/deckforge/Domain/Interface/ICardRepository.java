@@ -11,8 +11,8 @@ public interface ICardRepository {
     List<Card> getAllCards();
     List<Card> getCardsByUser(User user);
     List<Card> getFirstThreeCards();
-    Card getCardById(int id);
     void addNewCard(Card card);
+    void addCardToUserCollection(int userId, int cardId, int quantity);
     Card readCard(Card card);
     void deleteCard(int id);
 }

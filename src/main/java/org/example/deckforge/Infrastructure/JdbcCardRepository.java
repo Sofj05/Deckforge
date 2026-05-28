@@ -39,18 +39,32 @@ public class JdbcCardRepository implements ICardRepository {
 
         return  card;
     };
+    private final RowMapper<Card> cardRowMapperWOQuantity = (rs, rowNum) -> {
+
+        Card card = new Card();
+
+        card.setId(rs.getInt("card_id"));
+        card.setName((rs.getString("card_name")));
+        card.setCardtype((Cardtype.valueOf(rs.getString("cardType"))));
+        card.setMana(rs.getString("mana"));
+        card.setNameOfSet((rs.getString("nameOfSet")));
+        card.setRarity(Rarity.valueOf(rs.getString("rarity")));
+        card.setRuleText(rs.getString("ruleText"));
+        card.setImage(rs.getString("image"));
+        card.setAbility(rs.getString("ability"));
+
+        return  card;
+    };
 
     @Override
     public List<Card> getAllCards(){
         String sql = """
                 Select *
                 from card
+                ORDER BY card_id ASC
                 """;
-        try {
-            return jdbcTemp.query(sql, cardRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+            return jdbcTemp.query(sql, cardRowMapperWOQuantity);
+
     }
     @Override
     public List<Card> getCardsByUser(User user){
@@ -69,49 +83,20 @@ public class JdbcCardRepository implements ICardRepository {
             FROM UserCollection uc
             JOIN User u
                 ON uc.user_id = u.user_id
-            JOIN Card c
+            JOIN card c
                 ON uc.card_id = c.card_id
             WHERE u.user_id = ?;
             """;
-        try {
+
             return jdbcTemp.query(sql, cardRowMapper,user.getId());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
 
     };
-    @Override
-    public Card getCardById(int id){
-      String sql = """
-              SELECT
-                c.card_id,
-                c.card_name,
-                c.cardType,
-                c.mana,
-                c.nameOfSet,
-                c.rarity,
-                c.ruleText,
-                c.image,
-                c.ability,
-                uc.quantity
-            FROM UserCollection uc
-            JOIN User u
-                ON uc.user_id = u.user_id
-            JOIN Card c
-                ON uc.card_id = c.card_id
-            WHERE c.card_id = ?;
-              """;
-      try{
-            return  jdbcTemp.queryForObject(sql,cardRowMapper,id);
-      } catch (EmptyResultDataAccessException e){
-            return null;
-      }
-    }
+
 
     @Override
     public void addNewCard(Card card){
         String sql = """
-                INSERT INTO Card
+                INSERT INTO card
                 (card_name, cardType, mana, nameOfSet, rarity, ruleText, image, ability)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?) 
                 """;
@@ -126,6 +111,19 @@ public class JdbcCardRepository implements ICardRepository {
                 card.getImage(),
                 card.getAbility()
         );
+    }
+
+
+    @Override
+    public void addCardToUserCollection(int userId, int cardId, int quantity) {
+
+        String sql = """
+        INSERT INTO UserCollection (user_id, card_id, quantity)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE quantity = quantity + ?
+        """;
+
+        jdbcTemp.update(sql, userId, cardId, quantity, quantity);
     }
 
     @Override
@@ -157,7 +155,7 @@ public class JdbcCardRepository implements ICardRepository {
     @Override
     public void deleteCard(int id){
         String sql = """
-                DELETE FROM Card
+                DELETE FROM card
                 WHERE id = ?
                 """;
         jdbcTemp.update(sql, id);
@@ -172,11 +170,8 @@ public class JdbcCardRepository implements ICardRepository {
                 LIMIT 3
                 """;
 
-        try {
-            return jdbcTemp.query(sql, cardRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+            return jdbcTemp.query(sql, cardRowMapperWOQuantity);
+
     }
 
 

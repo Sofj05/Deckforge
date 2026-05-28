@@ -34,27 +34,26 @@ public class CardService {
         }
     }
 
-    public void readCard(Card card) {
-        validation.validateNewCard(card);
-        cRepo.readCard(card);
-    }
-
-    public void deleteCard(int id) {
-        validation.validateInt(id);
-        cRepo.deleteCard(id);
-    }
 
     public List<Card> getAllCards() {
-        return null;
+        return cRepo.getAllCards();
     }
 
     public List<Card> getCardsByUser(User user) {
         return cRepo.getCardsByUser(user);
     }
-    public Card getCardByUser(int id){
-        return cRepo.getCardById(id);
-    }
+    public void addCardToUserCollection(int userId, int cardId, int quantity) {
 
+        validation.validateInt(userId);
+        validation.validateInt(cardId);
+        validation.validateInt(quantity);
+
+        if (quantity < 1) {
+            throw new IllegalArgumentException("Quantity must be at least 1");
+        }
+
+        cRepo.addCardToUserCollection(userId, cardId, quantity);
+    }
 
     public void createCard(String cardName, Cardtype cardType, String mana, String nameOfSet, Rarity rarity, String ruleText, String ability, String image) {
         // Lav nyt Card-objekt

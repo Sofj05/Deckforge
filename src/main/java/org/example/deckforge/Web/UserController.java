@@ -165,7 +165,23 @@ public UserController(UserService userService, CardService cardService, DeckServ
         model.addAttribute("cards", cards);
         model.addAttribute("totalCards", totalCards);
 
-        return "user/deck";
+        return "deck/deck";
+    }
+    @PostMapping("/addCard")
+    public String addCardToCollection(
+            @RequestParam int cardId,
+            @RequestParam int amount,
+            HttpSession session) {
+
+        User user = (User) session.getAttribute("loggedInUser");
+
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+
+        cardService.addCardToUserCollection(user.getId(), cardId, amount);
+
+        return "redirect:/card/cardList";
     }
 
     @GetMapping("/updateUser")
