@@ -57,15 +57,7 @@ public class JdbcUserRepository implements IUserRepository {
         """;
 
         try {
-            return jdbcTemp.queryForObject(sql, (rs, rowNUM) -> {
-                User u = new User();
-                u.setId(rs.getInt("user_id"));
-                u.setUsername(rs.getString("username"));
-                u.setEmail(rs.getString("email"));
-                u.setPasswordHash(rs.getString("passwordhash"));
-                u.setRole(Role.valueOf(rs.getString("role")));
-                return u;
-            }, user.getId());
+            return jdbcTemp.queryForObject(sql, userRowMapper, user.getId());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -85,16 +77,7 @@ public class JdbcUserRepository implements IUserRepository {
                 """;
 
         try {
-            return jdbcTemp.queryForObject(sql, (rs, rowNum) -> {
-                User u = new User();
-                u.setId(rs.getInt("user_id"));
-                u.setUsername(rs.getString("username"));
-                u.setEmail(rs.getString("email"));
-                u.setPasswordHash(rs.getString("passwordhash"));
-                u.setRole(Role.valueOf(rs.getString("role")));
-
-                return u;
-            },  username);
+            return jdbcTemp.queryForObject(sql, userRowMapper,  username);
         } catch (EmptyResultDataAccessException e){
             return null;
         }
@@ -164,15 +147,7 @@ public class JdbcUserRepository implements IUserRepository {
         """;
 
         try {
-            return jdbcTemp.queryForObject(sql, (rs, rowNUM) -> {
-                User u = new User();
-                u.setId(rs.getInt("user_id"));
-                u.setUsername(rs.getString("username"));
-                u.setEmail(rs.getString("email"));
-                u.setPasswordHash(rs.getString("passwordhash"));
-                u.setRole(Role.valueOf(rs.getString("role")));
-                return u;
-            }, id);
+            return jdbcTemp.queryForObject(sql, userRowMapper, id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
