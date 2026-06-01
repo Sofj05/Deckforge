@@ -17,6 +17,7 @@
 
 <section class="content container">
     <h2 th:text="${event.name}" style="display:inline-block; margin-right:10px;"></h2>
+    <!--Tilmeld event -->
     <form   id="participateForm"
             th:action="@{/event/participate/{id}(id=${event.id})}"
             method="post"
@@ -31,9 +32,23 @@
         </button>
     </form>
 
+
+    <div th:if="${event.organizer.id == loggedInUser.id}">
+        <button type="button"
+                class="btn small"
+                id="finishEventBtn">
+            Afslut event
+        </button>
+    </div>
+
+
     <div class="event-info">
         <p id="organizerProfile" style="display:none;"> <!-- Ligesom knappen ovenover, vil denne status-linje kun vises for arrangøren -->
             <strong>Status:</strong> <span th:text="${event.status.description}"></span>
+        </p>
+        <p th:if="${event.status.name() == 'COMPLETED' and winner != null}" class="winner-text">
+            🏆<strong>Vinder:</strong>
+            <span th:text="${winner.username}"></span>
         </p>
         <p><strong>Dato:</strong> <span th:text="${event.date}"></span></p>
         <p><strong>Tidspunkt:</strong> <span th:text="${event.time}"></span></p>
@@ -59,6 +74,36 @@
 
 </section>
 
+<div id="winnerModal" class="modal">
+    <div class="modal-content">
+
+        <span class="close" id="closeWinnerModal">&times;</span>
+
+        <h2>Vælg vinder</h2>
+
+        <form th:action="@{/event/completeWithWinner/{id}(id=${event.id})}"
+              method="post">
+
+            <select name="winnerId" required>
+                <option value="">-- Vælg vinder --</option>
+
+                <option th:each="participant : ${participants}"
+                        th:value="${participant.id}"
+                        th:text="${participant.username}">
+                </option>
+            </select>
+
+            <button type="submit" class="btn">
+                Afslut event
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+
+
 <!--Bruges til at vise 'tilmeld' knappe hvis man åbner den fra 'ongoingEvents' siden -->
 <script>
     const params = new URLSearchParams(window.location.search); // Denne linje hjælper med at tjekke hvad der står efter URL'en
@@ -75,6 +120,41 @@
     if (params.get("from") === "profile") { // Læser URL parametren, det der blev sendt ind fra den html man var på før man trykkede ind på denne
         document.getElementById("organizerProfile").style.display = "inline-block"; // Tager knappens id og ændrer dens udseende så man igen kan se knappen
     }
+</script>
+<!--Til afslutningsmodal da den kun skal vises hvis der er format tilknyttet event-->
+<script th:inline="javascript">
+
+    const btn = document.getElementById("finishEventBtn");
+    const modal = document.getElementById("winnerModal");
+    const closeBtn = document.getElementById("closeWinnerModal");
+
+    const hasFormat = /*[[${event.format != null}]]*/ false;
+    const eventId = /*[[${event.id}]]*/ 0;
+
+    btn?.addEventListener("click", () => {
+
+        if (hasFormat) {
+            modal.style.display = "block";
+        } else {
+            fetch("/event/complete/" + eventId, {
+                method: "POST"
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+
+    });
+
+    closeBtn?.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
 </script>
 
 </body>

@@ -153,5 +153,18 @@ public class JdbcUserRepository implements IUserRepository {
         }
 
     }
+
+    public Integer getWinnerByEventId(int id){
+        String sql = """
+                SELECT user_id
+                FROM event_winner
+                WHERE event_id = ?
+        """;
+        try{
+            return jdbcTemp.queryForObject(sql, Integer.class, id);
+        } catch (EmptyResultDataAccessException e){
+            throw new RuntimeException("Kunne ikke indlæse vinder");
+        }
+    }
 }
 

@@ -17,6 +17,11 @@
         <li><a th:href="@{/user/profile}">Din Profil</a></li>
         <li><a th:href="@{/event/ongoingEvents}">Events</a></li>
         <li><a th:href="@{/card/cardList}">Alle Kort</a></li>
+        <li>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Log Out</button>
+            </form>
+        </li>
       </ul>
     </nav>
   </div>

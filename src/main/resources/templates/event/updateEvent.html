@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Opdater Event</title>
+    <!-- Style stien til hjemmesiden -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<section class="content container">
+
+    <form th:action="@{/event/updateEvent/{id}(id=${event.id})}"
+          method="post"
+          th:object="${event}">
+
+        <h2 th:text="${event.name}" style="display:inline-block; margin-right:10px;"></h2>
+
+        <div class="form-group">
+            <label for="date">Dato</label>
+            <input type="date" id="date" th:field="*{date}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">Tid</label>
+            <input type="time" id="time" th:field="*{time}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="location">Lokation</label>
+            <input type="text" id="location" th:field="*{location}"
+                   placeholder="Fx. København, Odense" required>
+        </div>
+
+        <div class="form-group">
+            <label for="maxParticipants">Maks deltagere</label>
+            <input type="number" id="maxParticipants"
+                   th:field="*{maxParticipants}" min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label for="format">Format</label>
+            <select id="format" th:field="*{format}">
+                <option th:value="${null}">- Vælg format -</option>
+                <option th:each="f : ${format}"
+                        th:value="${f}"
+                        th:text="${f.description}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="rules">Regler / Beskrivelse</label>
+            <textarea id="rules"
+                      th:field="*{rules}"
+                      rows="5"></textarea>
+        </div>
+
+        <button type="submit" class="btn">
+            Rediger event
+        </button>
+
+    </form>
+
+    <p th:if="${error != null}"
+       th:text="${error}"
+       style="color:orange;">
+    </p>
+
+</section>
+
+</body>
+</html>

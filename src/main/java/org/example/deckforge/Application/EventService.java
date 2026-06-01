@@ -25,7 +25,6 @@ public class EventService {
     }
 
     public Event getEventById(int id) {
-        validation.validateInt(id);
         Event event = eRepo.getEventById(id);
         setOrganizer(event);
         return event;
@@ -64,7 +63,6 @@ public class EventService {
     }
     
     public void deleteEvent(int id) {
-        validation.validateInt(id);
         eRepo.deleteEvent(id);
     }
 
@@ -84,8 +82,26 @@ public class EventService {
 
     public void completeEvent(Event event, User user){
         //Lav status om til completed og evt. giv vinder på dem der vandt + validering på at det er arrangøren der gør dette
+        if (event.getOrganizer().getId() == user.getId()){
+            event.setStatus(Status.COMPLETED);
+            eRepo.updateEvent(event.getId(), event);
+        } else {
+            throw new ValidationException("Kun arrangøren kan afslutte dette event");
+        }
 
     }
+
+    public void completeEventWithWinner(Event event, User user, int winnerId){
+        if (event.getOrganizer().getId() == user.getId()){
+            event.setStatus(Status.COMPLETED);
+            eRepo.updateEvent(event.getId(), event);
+            eRepo.saveWinner(winnerId, event);
+        } else {
+            throw new ValidationException("Kun arrangøren kan afslutte dette event");
+        }
+    }
+
+
 
     public void participateEvent(Event event, User user){
         //Sikrer at man ikke overskrider grænsen for deltagere
@@ -128,6 +144,15 @@ public class EventService {
     public List<Event> getOrganizersEvents(User user){
         List<Event> events = eRepo.getOrganizersEvents(user);
         setOrganizers(events);
+        return events;
+    }
+
+    public List<Event> getWinsForUser(User user){
+        List<Integer> eventId = eRepo.getUsersWins(user);
+        List<Event> events = new ArrayList<>();
+        for (Integer id : eventId){
+            events.add(eRepo.getEventById(id));
+        }
         return events;
     }
 

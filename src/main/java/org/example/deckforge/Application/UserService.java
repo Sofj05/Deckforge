@@ -74,7 +74,6 @@ public class UserService {
     }
 
     public void deleteUser(int id) {
-        validation.validateInt(id);
         uRepo.deleteUser(id);
     }
 
@@ -97,4 +96,13 @@ public class UserService {
         return uRepo.getUserById(id);
     }
 
+    public User getWinnerByEventId(int id){
+        int winnerId = uRepo.getWinnerByEventId(id);
+        User winner = uRepo.getUserById(winnerId);
+        return winner;
+    }
+
+    public User getLoggedInUser() {
+        return null;
+    }
 }

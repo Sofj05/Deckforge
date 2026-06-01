@@ -10,7 +10,6 @@ import org.example.deckforge.Domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -80,8 +79,10 @@ public class EventController {
     @GetMapping("/showEvent/{id}")
     public String showEvent(@PathVariable int id, Model model ) {
         Event event = eventService.getEventById(id);
+        User winner = userService.getWinnerByEventId(id);
         model.addAttribute("event", event);
         model.addAttribute("participants", eventService.getParticipationList(event));
+        model.addAttribute("winner", winner);
         return "event/showEvent";
     }
 
@@ -89,16 +90,58 @@ public class EventController {
 
     // Get: Viser Opdater Event Form
     @GetMapping("/updateEvent/{id}")
-    public String showUpdateForm(Model model, int id) {
+    public String showUpdateForm(Model model, @PathVariable int id) {
         Event event = eventService.getEventById(id);
         model.addAttribute("event", event);
         return "/event/updateEvent";
     }
 
     // Post: Opdater Event
-    @PostMapping("/updateEvent")
-    public String updateEvent(@ModelAttribute("event") Event event) {
-    Event existingEvent = eventService.getEventById(event.getId());
+    @PostMapping("/updateEvent/{id}")
+    public String updateEvent(@ModelAttribute Event event, @PathVariable int id, RedirectAttributes redirectAttributes) {
+    event.setName(eventService.getEventById(id).getName());
+        try {
+            eventService.updateEvent(id,  event);
+            return "redirect:/user/profile";
+
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error",  ex.getMessage());
+            return "redirect:/event/updateEvent/" + id;
+        }
+
+    }
+
+    //POST: Afslut event uden vinder
+    @PostMapping("/complete")
+    public String completeEvent(@PathVariable int id, HttpSession session){
+        if (!AuthHelper.isLoggedIn(session)){
+            return "redirect:/user/login";
+        }
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+        Event finishedEvent = eventService.getEventById(id);
+        try {
+            eventService.completeEvent(finishedEvent, loggedInUser);
+            return "rediret:/user/profile";
+        } catch (Exception e){
+            return "redirect:/user/profile";
+        }
+
+    }
+
+    @PostMapping("/completeWithWinner")
+    public String completeWithWinner(@PathVariable int id, @PathVariable int winnerId, HttpSession session){
+        if (!AuthHelper.isLoggedIn(session)){
+            return "redirect:/user/login";
+        }
+        User loggedInUser = AuthHelper.getLoggedIn(session);
+        Event finishedEvent = eventService.getEventById(id);
+        try {
+            eventService.completeEventWithWinner(finishedEvent, loggedInUser, winnerId);
+        } catch (Exception e){
+
+            return "redirect:/user/profile";
+        }
+
         return null;
     }
 

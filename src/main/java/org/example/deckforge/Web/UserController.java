@@ -115,6 +115,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
         model.addAttribute("decktypes", Decktype.values());
         model.addAttribute("joinedEvents", eventService.getUsersParticipation(loggedInUser));
         model.addAttribute("organizersEvents", eventService.getOrganizersEvents(loggedInUser));
+        model.addAttribute("wins", eventService.getWinsForUser(loggedInUser));
 
         model.addAttribute("deck", new Deck());
 

@@ -12,6 +12,7 @@ public interface IEventRepository {
     void createEvent(Event event);
     Event readEvent(Event event);
     void updateEvent(int id, Event event);
+    void saveWinner(int winnerId, Event event);
     void deleteEvent(int id);
     List<Event> getEventsByStatus(Status status);
     int getParticipationCount(Event event);
@@ -20,4 +21,5 @@ public interface IEventRepository {
     void addParticipant(Event event, User user);
     List<Integer> getUsersParticipation(User user);
     List<Event> getOrganizersEvents(User user);
+    List<Integer> getUsersWins(User user);
 }

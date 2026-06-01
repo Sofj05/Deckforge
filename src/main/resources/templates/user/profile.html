@@ -81,6 +81,11 @@
                     Se info
                 </a>
 
+                <a th:href="@{/event/updateEvent/{id}(id=${event.id})}"
+                   class="btn-small">
+                    Rediger
+                </a>
+
             </div>
 
         </div>
@@ -99,6 +104,37 @@
                 <strong>Arrangør:</strong>
                 <span th:text="${event.organizer.username}"></span>
             </p>
+
+            <p>
+                <strong>Dato:</strong>
+                <span th:text="${event.date}"></span>
+            </p>
+
+            <p>
+                <strong>Tid:</strong>
+                <span th:text="${event.time}"></span>
+            </p>
+
+            <div class="event-card-actions">
+
+                <a th:href="@{/event/showEvent/{id}(id=${event.id})}"
+                   class="btn small">
+                    Se info
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Vundne events -->
+<section class="content container"  th:if="${wins != null and !#lists.isEmpty(wins)}">
+    <h1>Dine tilmeldte events</h1>
+
+    <div class="event-card-container">
+        <div class="event-card" th:each="event : ${wins}">
+            <h3 th:text="${event.name}"></h3>
 
             <p>
                 <strong>Dato:</strong>

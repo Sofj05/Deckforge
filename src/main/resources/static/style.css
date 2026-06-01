@@ -1055,7 +1055,6 @@ h1 {
     color: #e5e7eb;
 }
 
-
 .deck-meta strong {
     color: #a5b4fc;
 }
@@ -1066,3 +1065,9 @@ h1 {
     width: 100%;
 }
 
+/* Vinder tekst */
+.winner-text {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 15px 0;
+}

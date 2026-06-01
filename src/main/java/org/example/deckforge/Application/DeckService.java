@@ -42,9 +42,6 @@ public class DeckService {
     }
 
     public void addCardToDeck(int deckId, int cardId, int quantity) {
-        validation.validateInt(deckId);
-        validation.validateInt(cardId);
-        validation.validateInt(quantity);
         if (quantity < 1) {
             throw new IllegalArgumentException("Antal kort skal være mindst 1");
         }
@@ -52,9 +49,6 @@ public class DeckService {
     }
 
     public void removeCardFromDeck(int deckId, int cardId, int quantity) {
-        validation.validateInt(deckId);
-        validation.validateInt(cardId);
-        validation.validateInt(quantity);
         if (quantity < 1) {
             throw new IllegalArgumentException("Antal kort skal være mindst 1");
         }
@@ -62,7 +56,6 @@ public class DeckService {
     }
 
     public void deleteDeck(int id) {
-        validation.validateInt(id);
         dRepo.deleteDeck(id);
     }
 }

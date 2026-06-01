@@ -157,6 +157,19 @@ public class JdbcEventRepository implements IEventRepository {
                 );
     }
 
+    public void saveWinner(int winnerId, Event event) {
+        String sql = """
+                INSERT INTO event_winner
+                (event_id, user_id)
+                VALUES (?, ?)    
+        """;
+        try {
+            jdbcTemp.update(sql, event.getId(), winnerId);
+        } catch (EmptyResultDataAccessException e){
+            throw new RuntimeException("Kunne ikke indsætte vinder");
+        }
+    }
+
     @Override
     public void deleteEvent(int id) {
         String sql = """
@@ -282,6 +295,22 @@ public class JdbcEventRepository implements IEventRepository {
             throw new ValidationException("Kunne ikke tilmelde eventet");
 
      }
+    }
+
+    public List<Integer> getUsersWins(User user){
+        String sql = """
+                SELECT
+                    event_id
+                FROM
+                    event_winner
+                WHERE user_id = ?
+        """;
+
+        try {
+            return jdbcTemp.queryForList(sql, Integer.class, user.getId());
+        } catch (EmptyResultDataAccessException e){
+            throw new RuntimeException("Kunne ikke indlæse vundne events");
+        }
     }
 
 
