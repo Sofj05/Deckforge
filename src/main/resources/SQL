@@ -75,7 +75,6 @@ FOREIGN KEY (card_id) REFERENCES Card(card_id),
 FOREIGN KEY (deck_id) REFERENCES Deck(deck_id)
 );
 
-INSERT INTO UserCollection (user_id, card_id) VALUES (1, 3);
 
 CREATE TABLE Trade (
     trade_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -96,4 +95,12 @@ CREATE TABLE Trade (
 
     FOREIGN KEY (offered_card_id) REFERENCES Card(card_id),
     FOREIGN KEY (requested_card_id) REFERENCES Card(card_id)
+);
+
+CREATE TABLE event_winner (
+    event_id INT NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (event_id),
+    FOREIGN KEY (event_id) REFERENCES event(event_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
 );

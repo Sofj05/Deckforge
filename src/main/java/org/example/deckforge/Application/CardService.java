@@ -62,5 +62,6 @@ public class CardService {
     }
 
     public Card getCardById(int offeredCardId) {
+        return null;
     }
 }

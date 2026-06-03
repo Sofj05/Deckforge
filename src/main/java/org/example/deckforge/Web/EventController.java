@@ -77,9 +77,11 @@ public class EventController {
 
     // Get: Viser Event info
     @GetMapping("/showEvent/{id}")
-    public String showEvent(@PathVariable int id, Model model ) {
+    public String showEvent(@PathVariable int id, Model model, HttpSession session ) {
+        User loggedInUser = AuthHelper.getLoggedIn(session);
         Event event = eventService.getEventById(id);
         User winner = userService.getWinnerByEventId(id);
+        model.addAttribute("loggedInUser",loggedInUser);
         model.addAttribute("event", event);
         model.addAttribute("participants", eventService.getParticipationList(event));
         model.addAttribute("winner", winner);
@@ -98,8 +100,16 @@ public class EventController {
 
     // Post: Opdater Event
     @PostMapping("/updateEvent/{id}")
-    public String updateEvent(@ModelAttribute Event event, @PathVariable int id, RedirectAttributes redirectAttributes) {
-    event.setName(eventService.getEventById(id).getName());
+    public String updateEvent(@ModelAttribute Event event, @PathVariable int id, RedirectAttributes redirectAttributes, HttpSession session) {
+        if (!AuthHelper.isLoggedIn(session)) {
+            return "redirect:/user/login";
+        }
+        //Sætte værdier der ikke hentes fra formularen
+        User loggedIn = AuthHelper.getLoggedIn(session);
+        event.setOrganizer(loggedIn);
+        event.setName(eventService.getEventById(id).getName());
+        event.setStatus(eventService.getEventById(id).getStatus());
+
         try {
             eventService.updateEvent(id,  event);
             return "redirect:/user/profile";
@@ -112,8 +122,8 @@ public class EventController {
     }
 
     //POST: Afslut event uden vinder
-    @PostMapping("/complete")
-    public String completeEvent(@PathVariable int id, HttpSession session){
+    @PostMapping("/complete/{id}")
+    public String completeEvent(@PathVariable int id, HttpSession session, RedirectAttributes redirectAttributes){
         if (!AuthHelper.isLoggedIn(session)){
             return "redirect:/user/login";
         }
@@ -121,15 +131,16 @@ public class EventController {
         Event finishedEvent = eventService.getEventById(id);
         try {
             eventService.completeEvent(finishedEvent, loggedInUser);
-            return "rediret:/user/profile";
-        } catch (Exception e){
             return "redirect:/user/profile";
+        } catch (Exception e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/event/showEvent/" + id;
         }
 
     }
 
-    @PostMapping("/completeWithWinner")
-    public String completeWithWinner(@PathVariable int id, @PathVariable int winnerId, HttpSession session){
+    @PostMapping("/completeWithWinner/{id}")
+    public String completeWithWinner(@PathVariable int id, @RequestParam int winnerId, HttpSession session, RedirectAttributes redirectAttributes){
         if (!AuthHelper.isLoggedIn(session)){
             return "redirect:/user/login";
         }
@@ -137,12 +148,12 @@ public class EventController {
         Event finishedEvent = eventService.getEventById(id);
         try {
             eventService.completeEventWithWinner(finishedEvent, loggedInUser, winnerId);
-        } catch (Exception e){
-
             return "redirect:/user/profile";
+        } catch (Exception e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/event/showEvent/" + id;
         }
 
-        return null;
     }
 
     // Get: Confirm Delete Event

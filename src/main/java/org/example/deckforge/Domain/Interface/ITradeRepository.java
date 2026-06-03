@@ -13,4 +13,5 @@ public interface ITradeRepository {
     Trade getTrade(int tradeId);
     List<Trade> getIncomingTrades(int id);
     List<Trade> getOutgoingTrades(int id);
+    Trade getTradeById(int id);
 }

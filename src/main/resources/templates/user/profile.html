@@ -82,7 +82,7 @@
                 </a>
 
                 <a th:href="@{/event/updateEvent/{id}(id=${event.id})}"
-                   class="btn-small">
+                   class="btn small">
                     Rediger
                 </a>
 
@@ -454,40 +454,40 @@ let html = "<ul>";
     });
 
     // ---------------------------
-    // Deck modal - EDIT
-    // ---------------------------
-    const editDeckModal = document.getElementById("editDeckModal");
-    const closeEditDeckModal = document.getElementById("closeEditDeckModal");
-    const editDeckForm = document.getElementById("editDeckForm");
-    const editDeckNameInput = document.getElementById("editDeckName");
-    const editDeckFormatSelect = document.getElementById("editDeckFormat");
-    let currentDeckId = null;
+// Deck modal - EDIT
+// ---------------------------
+const editDeckModal = document.getElementById("editDeckModal");
+const closeEditDeckModal = document.getElementById("closeEditDeckModal");
+const editDeckForm = document.getElementById("editDeckForm");
+const editDeckNameInput = document.getElementById("editDeckName");
+const editDeckFormatSelect = document.getElementById("editDeckFormat");
+let currentDeckId = null;
 
-    // Åbn edit modal når man klikker på Rediger knap
-    document.querySelectorAll('.edit-deck-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById("editDeckId").value = btn.dataset.id;
-            document.getElementById("editDeckName").value = btn.dataset.name;
-            document.getElementById("editDeckFormat").value = btn.dataset.format;
-            document.getElementById("deleteDeckForm").action =
-                `/decks/delete/${btn.dataset.id}`;
+// Åbn edit modal når man klikker på Rediger knap
+document.querySelectorAll('.edit-deck-btn').forEach(btn => {
+btn.addEventListener('click', (e) => {
+e.stopPropagation();
+document.getElementById("editDeckId").value = btn.dataset.id;
+document.getElementById("editDeckName").value = btn.dataset.name;
+document.getElementById("editDeckFormat").value = btn.dataset.format;
+document.getElementById("deleteDeckForm").action =
+`/decks/delete/${btn.dataset.id}`;
 
-            editDeckModal.style.display = "flex";
-        });
-    });
+editDeckModal.style.display = "flex";
+});
+});
 
-    // Luk modal via X
-    closeEditDeckModal.addEventListener("click", () => {
-        editDeckModal.style.display = "none";
-    });
+// Luk modal via X
+closeEditDeckModal.addEventListener("click", () => {
+editDeckModal.style.display = "none";
+});
 
-    // Luk modal ved klik udenfor
-    window.addEventListener("click", (e) => {
-        if (e.target === editDeckModal) {
-            editDeckModal.style.display = "none";
-        }
-    });
+// Luk modal ved klik udenfor
+window.addEventListener("click", (e) => {
+if (e.target === editDeckModal) {
+editDeckModal.style.display = "none";
+}
+});
 </script>
 
 </body>

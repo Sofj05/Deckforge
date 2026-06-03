@@ -17,6 +17,10 @@
 
 <section class="content container">
     <h2 th:text="${event.name}" style="display:inline-block; margin-right:10px;"></h2>
+    <p th:if="${error != null}"
+       th:text="${error}"
+       style="color:orange;">
+    </p>
     <!--Tilmeld event -->
     <form   id="participateForm"
             th:action="@{/event/participate/{id}(id=${event.id})}"
@@ -82,16 +86,19 @@
         <h2>Vælg vinder</h2>
 
         <form th:action="@{/event/completeWithWinner/{id}(id=${event.id})}"
-              method="post">
+              method="post"
+              class="form">
 
-            <select name="winnerId" required>
-                <option value="">-- Vælg vinder --</option>
+            <div class="form-group">
+                <select name="winnerId" required>
+                    <option value="">-- Vælg vinder --</option>
 
-                <option th:each="participant : ${participants}"
-                        th:value="${participant.id}"
-                        th:text="${participant.username}">
-                </option>
-            </select>
+                    <option th:each="participant : ${participants}"
+                            th:value="${participant.id}"
+                            th:text="${participant.username}">
+                    </option>
+                </select>
+            </div>
 
             <button type="submit" class="btn">
                 Afslut event
@@ -134,7 +141,7 @@
     btn?.addEventListener("click", () => {
 
         if (hasFormat) {
-            modal.style.display = "block";
+            modal.style.display = "flex";
         } else {
             fetch("/event/complete/" + eventId, {
                 method: "POST"

@@ -84,4 +84,12 @@ public class JdbcTradeRepository implements ITradeRepository {
 
         return t;
     };
+
+    public List<Trade> getTradesForUser(User user){
+        return null;
+    }
+
+    public Trade getTrade(int tradeId){
+        return null;
+    }
 }

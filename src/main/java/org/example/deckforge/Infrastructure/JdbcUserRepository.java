@@ -163,7 +163,7 @@ public class JdbcUserRepository implements IUserRepository {
         try{
             return jdbcTemp.queryForObject(sql, Integer.class, id);
         } catch (EmptyResultDataAccessException e){
-            throw new RuntimeException("Kunne ikke indlæse vinder");
+            return null;
         }
     }
 }

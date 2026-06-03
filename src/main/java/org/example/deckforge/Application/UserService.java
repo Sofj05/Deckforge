@@ -97,9 +97,11 @@ public class UserService {
     }
 
     public User getWinnerByEventId(int id){
-        int winnerId = uRepo.getWinnerByEventId(id);
-        User winner = uRepo.getUserById(winnerId);
-        return winner;
+        Integer winnerId = uRepo.getWinnerByEventId(id);
+        if (winnerId == null) {
+            return null;
+        }
+        return uRepo.getUserById(winnerId);
     }
 
     public User getLoggedInUser() {
