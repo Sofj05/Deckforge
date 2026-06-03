@@ -37,7 +37,7 @@
     </form>
 
 
-    <div th:if="${event.organizer.id == loggedInUser.id}">
+    <div th:if="${event.organizer.id == loggedInUser.id and event.status.name() != 'COMPLETED'}">
         <button type="button"
                 class="btn small"
                 id="finishEventBtn">

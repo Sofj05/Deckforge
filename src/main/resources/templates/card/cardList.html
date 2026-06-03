@@ -37,7 +37,7 @@
 
             <!-- BILLEDE -->
             <div class="card-image">
-                <img th:src="@{'/uploads/' + ${card.image}}" th:alt="${card.name}">
+                <img th:src="${card.image}" th:alt="${card.name}">
             </div>
 
             <!-- TYPE -->
@@ -227,7 +227,7 @@
     // ---------------------------
     // Modal lukker
     // ---------------------------
-    document.getElementById("add-modal").addEventListener("click", (e) => {
+    document.getElementById("card-modal").addEventListener("click", (e) => {
         if (e.target === e.currentTarget) {
             e.currentTarget.style.display = "none";
         }
