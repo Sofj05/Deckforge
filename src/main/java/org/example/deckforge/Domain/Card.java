@@ -3,6 +3,9 @@ package org.example.deckforge.Domain;
 import org.example.deckforge.Domain.Enums.Cardtype;
 import org.example.deckforge.Domain.Enums.Rarity;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 public class Card {
     private int id;
     private String name;
@@ -94,5 +97,11 @@ public class Card {
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImageUrl() {
+        return "https://api.scryfall.com/cards/named?exact="
+                + URLEncoder.encode(name, StandardCharsets.UTF_8)
+                + "&format=image&version=png";
     }
 }

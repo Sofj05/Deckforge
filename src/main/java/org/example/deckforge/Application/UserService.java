@@ -21,7 +21,7 @@ public class UserService {
     }
 
     public void createUser(User user) {
-        validation.validateUser(user);
+       // validation.validateUser(user);
 
         user.setUsername(user.getUsername().trim());
         user.setEmail(user.getEmail().trim());
