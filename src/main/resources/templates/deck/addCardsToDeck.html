@@ -13,7 +13,7 @@
 
 
 <section class="content container">
-    <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="btn">← Tilbage til deck</a>
+    <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn">← Tilbage til deck</a>
     <h1 style="margin-top: 20px;" th:text="'Tilføj kort til: ' + ${deck.name}">Tilføj kort til deck</h1>
     <p style="color: #666;">Vælg antal kort du ønsker at tilføje til dit deck</p>
 

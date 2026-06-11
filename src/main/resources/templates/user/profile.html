@@ -174,7 +174,7 @@
         <!-- LOOP GENNEM DECKS -->
         <article class="deck-item"
              th:each="deck : ${decks}">
-            <a th:href="@{/user/deck/{id}(id=${deck.id})}" class="deck-link">
+            <a th:href="@{/decks/{id}(id=${deck.id})}" class="deck-link">
 
                 <header class="deck-header">
                     <h3 th:text="${deck.name}">Deck name</h3>

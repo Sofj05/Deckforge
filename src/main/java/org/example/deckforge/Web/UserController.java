@@ -137,37 +137,7 @@ public UserController(UserService userService, CardService cardService, DeckServ
 
         return "user/usersCards";
     }
-    @GetMapping("/deck/{id}")
-    public String viewDeck(@PathVariable int id,
-                           HttpSession session,
-                           Model model) {
 
-        if (!AuthHelper.isLoggedIn(session)) {
-            return "redirect:/user/login";
-        }
-        User loggedInUser = AuthHelper.getLoggedIn(session);
-        Deck deck = deckService.getDeckById(id);
-        if (deck == null) {
-            return "redirect:/user/profile";
-        }
-        if (deck.getUserId() != null &&
-                !deck.getUserId().equals(loggedInUser.getId())) {
-            return "redirect:/user/profile";
-        }
-
-        List<Card> cards = deckService.getCardsInDeck(id);
-
-        int totalCards = cards.stream()
-                .mapToInt(Card::getQuantity)
-                .sum();
-
-        model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("deck", deck);
-        model.addAttribute("cards", cards);
-        model.addAttribute("totalCards", totalCards);
-
-        return "deck/deck";
-    }
     @PostMapping("/addCard")
     public String addCardToCollection(
             @RequestParam int cardId,

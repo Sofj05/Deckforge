@@ -91,6 +91,7 @@ public class DeckController {
         List<Card> cards = deckService.getCardsInDeck(deckId);
         int totalCards = cards.stream().mapToInt(Card::getQuantity).sum();
 
+        model.addAttribute("loggedInUser", loggedInUser);
         model.addAttribute("deck", deck);
         model.addAttribute("cards", cards);
         model.addAttribute("totalCards", totalCards);
